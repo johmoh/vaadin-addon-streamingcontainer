@@ -9,6 +9,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.vaadin.addons.streamingcontainer.Constants.Defaults;
+
 import com.vaadin.data.Container.Filter;
 
 // TODO: Auto-generated Javadoc

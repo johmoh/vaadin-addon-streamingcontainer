@@ -8,6 +8,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+import org.vaadin.addons.streamingcontainer.Constants.Limits;
+
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
@@ -29,7 +31,7 @@ public class LazyStreamingContainer<BEANTYPE> extends AbstractStreamingContainer
     private QueryFactory<BEANTYPE> queryFactory = null;
 
     /** The query definition. */
-    private GenericQueryDefinition<BEANTYPE> queryDefinition = null;
+    private QueryDefinition<BEANTYPE> queryDefinition = null;
 
     /** The query. */
     private Query<BEANTYPE> query = null;
@@ -69,7 +71,7 @@ public class LazyStreamingContainer<BEANTYPE> extends AbstractStreamingContainer
     {
         super();
         this.queryFactory = _queryFactory;
-        this.queryDefinition = new GenericQueryDefinition<BEANTYPE>(_queryDefinition);
+        this.queryDefinition = _queryDefinition;
     }
 
     /**
@@ -97,7 +99,13 @@ public class LazyStreamingContainer<BEANTYPE> extends AbstractStreamingContainer
         // System.out.println("CALL LazyStreamingQueryContainer.initializeQuery()");
         if (null == query) {
             if (null != queryFactory) {
-                query = queryFactory.createQuery(queryDefinition);
+                // TODO
+                query = queryFactory.createQuery( //
+                        queryDefinition, //
+                        Constants.EMPTY_ADDITIONAL_FILTERS, //
+                        Constants.EMPTY_SORT_PROPERTY_IDS, //
+                        Constants.EMPTY_SORT_PROPERTY_ASCENDING_STATES //
+                    );
             }
 
             if (null == query) {
@@ -480,7 +488,8 @@ public class LazyStreamingContainer<BEANTYPE> extends AbstractStreamingContainer
     @Override
     public List<?> getItemIds(final int _startIndex, final int _numberOfItems)
     {
-        //System.out.println("CALL LazyStreamingQueryContainer.getItemIds(" + _startIndex + ", " + _numberOfItems + ")");
+        // System.out.println("CALL LazyStreamingQueryContainer.getItemIds(" +
+        // _startIndex + ", " + _numberOfItems + ")");
         final List<?> result = index2itemIdList.subList(_startIndex, _startIndex + _numberOfItems);
         return result;
     }
@@ -551,7 +560,8 @@ public class LazyStreamingContainer<BEANTYPE> extends AbstractStreamingContainer
     @Override
     public Collection<Filter> getContainerFilters()
     {
-        final Collection<Filter> result = queryDefinition.getFilters();
+        // TODO
+        final Collection<Filter> result = null;
         return result;
     }
 
@@ -562,7 +572,7 @@ public class LazyStreamingContainer<BEANTYPE> extends AbstractStreamingContainer
     public void addContainerFilter(final Filter _filter)
         throws UnsupportedFilterException
     {
-        queryDefinition.addFilters(_filter);
+        // TODO
         refresh();
     }
 
@@ -572,7 +582,7 @@ public class LazyStreamingContainer<BEANTYPE> extends AbstractStreamingContainer
     @Override
     public void removeContainerFilter(final Filter _filter)
     {
-        queryDefinition.removeFilter(_filter);
+        // TODO
         refresh();
     }
 
@@ -582,7 +592,7 @@ public class LazyStreamingContainer<BEANTYPE> extends AbstractStreamingContainer
     @Override
     public void removeAllContainerFilters()
     {
-        queryDefinition.removeAllFilters();
+        // TODO
         refresh();
     }
 
@@ -597,7 +607,7 @@ public class LazyStreamingContainer<BEANTYPE> extends AbstractStreamingContainer
     @Override
     public void sort(final Object[] _sortPropertyIds, final boolean[] _sortPropertyAcendingStates)
     {
-        queryDefinition.setSortProperties(_sortPropertyIds, _sortPropertyAcendingStates);
+        // TODO
         refresh();
     }
 

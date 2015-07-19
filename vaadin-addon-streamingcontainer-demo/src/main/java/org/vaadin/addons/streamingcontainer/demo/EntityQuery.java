@@ -9,6 +9,8 @@ import java.util.Collection;
 import org.vaadin.addons.streamingcontainer.AbstractQuery;
 import org.vaadin.addons.streamingcontainer.QueryDefinition;
 
+import com.vaadin.data.Container.Filter;
+
 /**
  * The Class EntityQuery.
  */
@@ -35,9 +37,12 @@ public class EntityQuery extends AbstractQuery<Entity>
      * @param _queryDefinition
      *            the _query definition
      */
-    public EntityQuery(final QueryDefinition<Entity> _queryDefinition)
+    public EntityQuery(final QueryDefinition<Entity> _queryDefinition,
+                       final Filter[] _additionalFilters,
+                       final Object[] _sortPropertyIds,
+                       final boolean[] _sortPropertyAcendingStates)
     {
-        super(_queryDefinition);
+        super(_queryDefinition, _additionalFilters, _sortPropertyIds, _sortPropertyAcendingStates);
         System.out.println("CALL [" + this.hashCode() + "] EntityQuery.CONSTRUCTOR()");
     }
 
