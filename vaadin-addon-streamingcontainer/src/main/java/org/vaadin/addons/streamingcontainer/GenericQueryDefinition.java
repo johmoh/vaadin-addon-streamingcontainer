@@ -23,7 +23,7 @@ public final class GenericQueryDefinition<BEANTYPE> implements QueryDefinition<B
     private static final long serialVersionUID = 4991787542075663487L;
 
     /** The property definition set. */
-    private final GenericBeanDefinition<BEANTYPE> beanDefinition;
+    private final BeanDefinition<BEANTYPE> beanDefinition;
 
     /** The batch size hint. */
     private int batchSizeHint;
@@ -34,14 +34,22 @@ public final class GenericQueryDefinition<BEANTYPE> implements QueryDefinition<B
     /** The additional parameter map. */
     private Map<Object, Object> additionalParameterMap = new HashMap<Object, Object>();
 
-    /** The sort property ids. */
+    /**
+     * The sort property ids.<br>
+     * <br>
+     * <b>ATTENTION!<b> It is not allowed to modify the content of the array!
+     */
     public Object[] sortPropertyIds;
 
-    /** The sort property acending states. */
+    /**
+     * The sort property acending states.<br>
+     * <br>
+     * <b>ATTENTION!<b> It is not allowed to modify the content of the array!
+     */
     public boolean[] sortPropertyAcendingStates;
 
     /** The filters. */
-    public ArrayList<Filter> filters = new ArrayList<Filter>();
+    public ArrayList<Filter> filters;
 
     /**
      * Instantiates a new generic query definition.
@@ -51,41 +59,12 @@ public final class GenericQueryDefinition<BEANTYPE> implements QueryDefinition<B
      */
     public GenericQueryDefinition(final BeanDefinition<BEANTYPE> _beanDefinition)
     {
-        this(_beanDefinition, Defaults.DEFAULT_BATCH_SIZE_HINT, Defaults.DEFAULT_MAX_QUERY_SIZE_HINT);
-    }
-
-    /**
-     * Instantiates a new generic query definition.
-     *
-     * @param _beanDefinition
-     *            the _bean definition
-     * @param _batchSizeHint
-     *            the _batch size hint
-     */
-    public GenericQueryDefinition(final BeanDefinition<BEANTYPE> _beanDefinition, final int _batchSizeHint)
-    {
-        this(_beanDefinition, _batchSizeHint, Defaults.DEFAULT_MAX_QUERY_SIZE_HINT);
-    }
-
-    /**
-     * Instantiates a new generic query definition.
-     *
-     * @param _beanDefinition
-     *            the _bean definition
-     * @param _batchSizeHint
-     *            the _batch size hint
-     * @param _maxQuerySizeHint
-     *            the _max query size hint
-     */
-    public GenericQueryDefinition(final BeanDefinition<BEANTYPE> _beanDefinition,
-                                  final int _batchSizeHint,
-                                  final int _maxQuerySizeHint)
-    {
-        this.beanDefinition = new GenericBeanDefinition<BEANTYPE>(_beanDefinition);
-        this.batchSizeHint = _batchSizeHint;
-        this.maxQuerySizeHint = _maxQuerySizeHint;
-        this.sortPropertyIds = new Object[0];
-        this.sortPropertyAcendingStates = new boolean[0];
+        this.beanDefinition = _beanDefinition;
+        this.batchSizeHint = Defaults.DEFAULT_BATCH_SIZE_HINT;
+        this.maxQuerySizeHint = Defaults.DEFAULT_MAX_QUERY_SIZE_HINT;
+        this.sortPropertyIds = Constants.EMPTY_SORT_PROPERTY_IDS;
+        this.sortPropertyAcendingStates = Constants.EMPTY_SORT_PROPERTY_ASCENDING_STATES;
+        this.filters = new ArrayList<Filter>();
     }
 
     /**
@@ -99,8 +78,9 @@ public final class GenericQueryDefinition<BEANTYPE> implements QueryDefinition<B
         this.beanDefinition = new GenericBeanDefinition<BEANTYPE>(_prototype.getBeanDefinition());
         this.batchSizeHint = _prototype.getBatchSizeHint();
         this.maxQuerySizeHint = _prototype.getMaxQuerySizeHint();
-        this.sortPropertyIds = _prototype.getSortPropertyIds().clone();
-        this.sortPropertyAcendingStates = _prototype.getSortPropertyAcendingStates().clone();
+        this.sortPropertyIds = _prototype.getSortPropertyIds();
+        this.sortPropertyAcendingStates = _prototype.getSortPropertyAcendingStates();
+        this.filters = new ArrayList<Filter>();
         this.filters.addAll(_prototype.getFilters());
     }
 
@@ -240,7 +220,7 @@ public final class GenericQueryDefinition<BEANTYPE> implements QueryDefinition<B
     }
 
     /**
-     * @see org.vaadin.test.web.prototype.QueryDefinition#getSortPropertyIds()
+     * @see org.vaadin.addons.streamingcontainer.QueryDefinition#getSortPropertyIds()
      */
     @Override
     public Object[] getSortPropertyIds()
@@ -249,7 +229,7 @@ public final class GenericQueryDefinition<BEANTYPE> implements QueryDefinition<B
     }
 
     /**
-     * @see org.vaadin.test.web.prototype.QueryDefinition#getSortPropertyAcendingStates()
+     * @see org.vaadin.addons.streamingcontainer.QueryDefinition#getSortPropertyAcendingStates()
      */
     @Override
     public boolean[] getSortPropertyAcendingStates()
@@ -269,6 +249,15 @@ public final class GenericQueryDefinition<BEANTYPE> implements QueryDefinition<B
     public GenericQueryDefinition<BEANTYPE> setSortProperties(final Object[] _sortPropertyIds,
                                                               final boolean[] _sortPropertyAcendingStates)
     {
+        if ((null == _sortPropertyIds) != (null == _sortPropertyAcendingStates)) {
+            throw new IllegalArgumentException(
+                    "One array is NULL and the other is not (_sortPropertyIds, _sortPropertyAcendingStates)");
+        }
+        if ((null != _sortPropertyIds) && (_sortPropertyIds.length != _sortPropertyAcendingStates.length)) {
+            throw new IllegalArgumentException(
+                    "Arrays have diffenent size (_sortPropertyIds, _sortPropertyAcendingStates)");
+        }
+
         sortPropertyIds = _sortPropertyIds;
         sortPropertyAcendingStates = _sortPropertyAcendingStates;
         return this;

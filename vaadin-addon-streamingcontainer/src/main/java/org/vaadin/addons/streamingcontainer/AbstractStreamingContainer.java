@@ -22,6 +22,12 @@ public abstract class AbstractStreamingContainer<BEANTYPE> implements StreamingC
     /** The Constant serialVersionUID. */
     private static final long serialVersionUID = -2374091247518141937L;
 
+    /** The query factory. */
+    private final QueryFactory<BEANTYPE> queryFactory;
+
+    /** The query definition. */
+    private QueryDefinition<BEANTYPE> queryDefinition = null;
+
     /** The item set change listeners. */
     private final Collection<ItemSetChangeListener> itemSetChangeListeners = new ArrayList<ItemSetChangeListener>();
 
@@ -35,9 +41,71 @@ public abstract class AbstractStreamingContainer<BEANTYPE> implements StreamingC
     /**
      * Instantiates a new abstract streaming container.
      */
-    protected AbstractStreamingContainer()
+    protected AbstractStreamingContainer(final QueryFactory<BEANTYPE> _queryFactory,
+                                         final QueryDefinition<BEANTYPE> _queryDefinition)
     {
+        if (null == _queryFactory) {
+            throw new NullPointerException("_queryFactory is NULL");
+        }
+        if (null == _queryDefinition) {
+            throw new NullPointerException("_queryDefinition is NULL");
+        }
+
+        this.queryFactory = _queryFactory;
+        this.queryDefinition = _queryDefinition;
     }
+
+    /*************************************************************************
+     * QUERY FACTORY CONFIGURATION
+     *************************************************************************/
+
+    /**
+     * Gets the query factory.
+     *
+     * @return the query factory
+     */
+    public QueryFactory<BEANTYPE> getQueryFactory()
+    {
+        return queryFactory;
+    }
+
+    /*************************************************************************
+     * QUERY DEFINITION CONFIGURATION
+     *************************************************************************/
+
+    /**
+     * @see org.vaadin.addons.streamingcontainer.StreamingContainer#getQueryDefinition()
+     */
+    @Override
+    public QueryDefinition<BEANTYPE> getQueryDefinition()
+    {
+        return queryDefinition;
+    }
+
+    /**
+     * @see org.vaadin.addons.streamingcontainer.StreamingContainer#setQueryDefinition(org.vaadin.addons.streamingcontainer.QueryDefinition)
+     */
+    @Override
+    public void setQueryDefinition(final QueryDefinition<BEANTYPE> _queryDefinition)
+    {
+        if (null == _queryDefinition) {
+            throw new NullPointerException("_queryDefinition is NULL");
+        }
+
+        if (!this.queryDefinition.equals(_queryDefinition)) {
+            this.queryDefinition = _queryDefinition;
+            refresh();
+        }
+    }
+
+    /*************************************************************************
+     * ITEM SET ACCESS MANAGEMENT
+     *************************************************************************/
+
+    /**
+     * Refresh.
+     */
+    protected abstract void refresh();
 
     /*************************************************************************
      * ITEM SET ACCESS MANAGEMENT
@@ -238,22 +306,26 @@ public abstract class AbstractStreamingContainer<BEANTYPE> implements StreamingC
      * @see com.vaadin.data.Container.ItemSetChangeNotifier#addItemSetChangeListener(com.vaadin.data.Container.ItemSetChangeListener)
      */
     @Override
-    public void addItemSetChangeListener(final ItemSetChangeListener listener)
+    public void addItemSetChangeListener(final ItemSetChangeListener _listener)
     {
-        if (null != listener) {
-            itemSetChangeListeners.add(listener);
+        if (null == _listener) {
+            throw new NullPointerException("_listener is NULL");
         }
+
+        itemSetChangeListeners.add(_listener);
     }
 
     /**
      * @see com.vaadin.data.Container.ItemSetChangeNotifier#removeItemSetChangeListener(com.vaadin.data.Container.ItemSetChangeListener)
      */
     @Override
-    public void removeItemSetChangeListener(final ItemSetChangeListener listener)
+    public void removeItemSetChangeListener(final ItemSetChangeListener _listener)
     {
-        if (null != listener) {
-            itemSetChangeListeners.remove(listener);
+        if (null == _listener) {
+            throw new NullPointerException("_listener is NULL");
         }
+
+        itemSetChangeListeners.remove(_listener);
     }
 
     /**
@@ -261,9 +333,13 @@ public abstract class AbstractStreamingContainer<BEANTYPE> implements StreamingC
      */
     @Override
     @Deprecated
-    public void addListener(final ItemSetChangeListener listener)
+    public void addListener(final ItemSetChangeListener _listener)
     {
-        addItemSetChangeListener(listener);
+        if (null == _listener) {
+            throw new NullPointerException("_listener is NULL");
+        }
+
+        addItemSetChangeListener(_listener);
     }
 
     /**
@@ -271,9 +347,13 @@ public abstract class AbstractStreamingContainer<BEANTYPE> implements StreamingC
      */
     @Override
     @Deprecated
-    public void removeListener(final ItemSetChangeListener listener)
+    public void removeListener(final ItemSetChangeListener _listener)
     {
-        removeItemSetChangeListener(listener);
+        if (null == _listener) {
+            throw new NullPointerException("_listener is NULL");
+        }
+
+        removeItemSetChangeListener(_listener);
     }
 
     /**
@@ -321,7 +401,7 @@ public abstract class AbstractStreamingContainer<BEANTYPE> implements StreamingC
     {
         final QueryDefinition<BEANTYPE> queryDefinition = getQueryDefinition();
         final BeanDefinition<BEANTYPE> beanDefinition = queryDefinition.getBeanDefinition();
-        final Collection<Object> result = beanDefinition.getIds();
+        final Collection<Object> result = beanDefinition.getPropertyIds();
         return result;
     }
 
@@ -345,7 +425,7 @@ public abstract class AbstractStreamingContainer<BEANTYPE> implements StreamingC
     {
         final QueryDefinition<BEANTYPE> queryDefinition = getQueryDefinition();
         final BeanDefinition<BEANTYPE> beanDefinition = queryDefinition.getBeanDefinition();
-        final BeanPropertyDefinition propertyDefinition = beanDefinition.getDefinition(_propertyId);
+        final BeanPropertyDefinition propertyDefinition = beanDefinition.getPropertyDefinition(_propertyId);
         final Class<?> result = propertyDefinition.getType();
         return result;
     }
@@ -387,22 +467,26 @@ public abstract class AbstractStreamingContainer<BEANTYPE> implements StreamingC
      * @see com.vaadin.data.Container.PropertySetChangeNotifier#addPropertySetChangeListener(com.vaadin.data.Container.PropertySetChangeListener)
      */
     @Override
-    public void addPropertySetChangeListener(final PropertySetChangeListener listener)
+    public void addPropertySetChangeListener(final PropertySetChangeListener _listener)
     {
-        if (null != listener) {
-            propertySetChangeListeners.add(listener);
+        if (null == _listener) {
+            throw new NullPointerException("_listener is NULL");
         }
+
+        propertySetChangeListeners.add(_listener);
     }
 
     /**
      * @see com.vaadin.data.Container.PropertySetChangeNotifier#removePropertySetChangeListener(com.vaadin.data.Container.PropertySetChangeListener)
      */
     @Override
-    public void removePropertySetChangeListener(final PropertySetChangeListener listener)
+    public void removePropertySetChangeListener(final PropertySetChangeListener _listener)
     {
-        if (null != listener) {
-            propertySetChangeListeners.remove(listener);
+        if (null == _listener) {
+            throw new NullPointerException("_listener is NULL");
         }
+
+        propertySetChangeListeners.remove(_listener);
     }
 
     /**
@@ -410,9 +494,13 @@ public abstract class AbstractStreamingContainer<BEANTYPE> implements StreamingC
      */
     @Override
     @Deprecated
-    public void addListener(final PropertySetChangeListener listener)
+    public void addListener(final PropertySetChangeListener _listener)
     {
-        addPropertySetChangeListener(listener);
+        if (null == _listener) {
+            throw new NullPointerException("_listener is NULL");
+        }
+
+        addPropertySetChangeListener(_listener);
     }
 
     /**
@@ -420,9 +508,13 @@ public abstract class AbstractStreamingContainer<BEANTYPE> implements StreamingC
      */
     @Override
     @Deprecated
-    public void removeListener(final PropertySetChangeListener listener)
+    public void removeListener(final PropertySetChangeListener _listener)
     {
-        removePropertySetChangeListener(listener);
+        if (null == _listener) {
+            throw new NullPointerException("_listener is NULL");
+        }
+
+        removePropertySetChangeListener(_listener);
     }
 
     /**

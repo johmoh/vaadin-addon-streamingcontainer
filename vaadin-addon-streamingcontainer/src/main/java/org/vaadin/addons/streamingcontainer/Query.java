@@ -3,8 +3,6 @@
  */
 package org.vaadin.addons.streamingcontainer;
 
-import java.util.Collection;
-
 // TODO: Auto-generated Javadoc
 /**
  * The Interface IQuery.
@@ -19,16 +17,9 @@ public interface Query<BEANTYPE>
      *
      * @param _maxNumberOfObjects
      *            the _max number of objects
-     * @return the collection
+     * @return the query result
      */
-    public Collection<BEANTYPE> readNext(final int _maxNumberOfObjects);
-
-    /**
-     * Checks for more.
-     *
-     * @return true, if successful
-     */
-    public boolean hasMore();
+    public QueryResult<BEANTYPE> readNext(final int _maxNumberOfObjects);
 
     /**
      * Close stream.

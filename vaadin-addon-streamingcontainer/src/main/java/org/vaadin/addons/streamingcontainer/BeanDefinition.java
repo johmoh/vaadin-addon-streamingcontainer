@@ -30,34 +30,34 @@ public interface BeanDefinition<BEANTYPE>
     public Object getIdPropertyId();
 
     /**
-     * Contains id.
+     * Contains property id.
      *
      * @param _id
      *            the _id
      * @return true, if successful
      */
-    public boolean containsId(final Object _id);
+    public boolean containsPropertyId(final Object _id);
 
     /**
      * Gets the property ids.
      *
      * @return the property ids
      */
-    public Set<Object> getIds();
+    public Set<Object> getPropertyIds();
 
     /**
-     * Gets the ids of sortable definitions.
+     * Gets the ids of sortable property definitions.
      *
-     * @return the ids of sortable definitions
+     * @return the ids of sortable property definitions
      */
-    public Set<Object> getIdsOfSortableDefinitions();
+    public Set<Object> getIdsOfSortablePropertyDefinitions();
 
     /**
-     * Gets the definition.
+     * Gets the property definition.
      *
      * @param _id
      *            the id
      * @return the definition
      */
-    public BeanPropertyDefinition getDefinition(final Object _id);
+    public BeanPropertyDefinition getPropertyDefinition(final Object _id);
 }

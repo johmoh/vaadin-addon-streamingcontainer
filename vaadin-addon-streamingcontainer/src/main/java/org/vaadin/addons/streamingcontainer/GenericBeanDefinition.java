@@ -71,14 +71,12 @@ public final class GenericBeanDefinition<BEANTYPE> implements BeanDefinition<BEA
                                  final Object _idPropertyId,
                                  final boolean _addDefinitionsFromType)
     {
-        if (null == _type) {
-            throw new NullPointerException();
-        }
+        assert (null == _type);
 
         this.type = _type;
         this.idPropertyId = _idPropertyId;
         if (_addDefinitionsFromType) {
-            addOrSetDefinitionsFromType();
+            addOrSetPropertyDefinitionsFromType();
         }
     }
 
@@ -90,13 +88,12 @@ public final class GenericBeanDefinition<BEANTYPE> implements BeanDefinition<BEA
      */
     public GenericBeanDefinition(final BeanDefinition<BEANTYPE> _prototype)
     {
-        this(_prototype.getType(), false);
-
+        this.type = _prototype.getType();
         this.idPropertyId = _prototype.getIdPropertyId();
-        final Set<Object> idSet = _prototype.getIds();
+        final Set<Object> idSet = _prototype.getPropertyIds();
         for (final Object id : idSet) {
-            final BeanPropertyDefinition definition = _prototype.getDefinition(id);
-            addOrSetDefinition(definition);
+            final BeanPropertyDefinition definition = _prototype.getPropertyDefinition(id);
+            addOrSetPropertyDefinition(definition);
         }
     }
 
@@ -132,30 +129,30 @@ public final class GenericBeanDefinition<BEANTYPE> implements BeanDefinition<BEA
     }
 
     /**
-     * @see org.vaadin.addons.streamingcontainer.BeanDefinition#containsId(java.lang.Object)
+     * @see org.vaadin.addons.streamingcontainer.BeanDefinition#containsPropertyId(java.lang.Object)
      */
     @Override
-    public boolean containsId(final Object _id)
+    public boolean containsPropertyId(final Object _id)
     {
         final boolean result = id2DefinitionMap.containsKey(_id);
         return result;
     }
 
     /**
-     * @see org.vaadin.addons.streamingcontainer.BeanDefinition#getIds()
+     * @see org.vaadin.addons.streamingcontainer.BeanDefinition#getPropertyIds()
      */
     @Override
-    public Set<Object> getIds()
+    public Set<Object> getPropertyIds()
     {
         final Set<Object> result = id2DefinitionMap.keySet();
         return result;
     }
 
     /**
-     * @see org.vaadin.addons.streamingcontainer.BeanDefinition#getIdsOfSortableDefinitions()
+     * @see org.vaadin.addons.streamingcontainer.BeanDefinition#getIdsOfSortablePropertyDefinitions()
      */
     @Override
-    public Set<Object> getIdsOfSortableDefinitions()
+    public Set<Object> getIdsOfSortablePropertyDefinitions()
     {
         final Set<Object> result = new HashSet<Object>();
         final Set<Entry<Object, BeanPropertyDefinition>> entrySet = id2DefinitionMap.entrySet();
@@ -171,23 +168,23 @@ public final class GenericBeanDefinition<BEANTYPE> implements BeanDefinition<BEA
     }
 
     /**
-     * @see org.vaadin.addons.streamingcontainer.BeanDefinition#getDefinition(java.lang.Object)
+     * @see org.vaadin.addons.streamingcontainer.BeanDefinition#getPropertyDefinition(java.lang.Object)
      */
     @Override
-    public BeanPropertyDefinition getDefinition(final Object _id)
+    public BeanPropertyDefinition getPropertyDefinition(final Object _id)
     {
         final BeanPropertyDefinition result = id2DefinitionMap.get(_id);
         return result;
     }
 
     /**
-     * Adds the or set definition.
+     * Adds the or set a property definition.
      *
      * @param _definition
-     *            the _definition
+     *            the property definition
      * @return the generic bean definition
      */
-    public GenericBeanDefinition<BEANTYPE> addOrSetDefinition(final BeanPropertyDefinition _definition)
+    public GenericBeanDefinition<BEANTYPE> addOrSetPropertyDefinition(final BeanPropertyDefinition _definition)
     {
         final Object id = _definition.getId();
         id2DefinitionMap.put(id, _definition);
@@ -195,11 +192,12 @@ public final class GenericBeanDefinition<BEANTYPE> implements BeanDefinition<BEA
     }
 
     /**
-     * Adds the or set definitions from type.
+     * Adds the or set property definitions of all properties of the type (see
+     * {@link #getType()}).
      *
      * @return the generic bean definition
      */
-    public GenericBeanDefinition<BEANTYPE> addOrSetDefinitionsFromType()
+    public GenericBeanDefinition<BEANTYPE> addOrSetPropertyDefinitionsFromType()
     {
         List<PropertyDescriptor> propertyDescriptors;
         try {
@@ -221,7 +219,7 @@ public final class GenericBeanDefinition<BEANTYPE> implements BeanDefinition<BEA
                         final boolean readOnly = (null == pd.getWriteMethod());
                         final BeanPropertyDefinition definition = new GenericBeanPropertyDefinition(propertyId, type,
                                 defaultValue, readOnly, false);
-                        addOrSetDefinition(definition);
+                        addOrSetPropertyDefinition(definition);
                     }
                 }
             }
@@ -231,24 +229,24 @@ public final class GenericBeanDefinition<BEANTYPE> implements BeanDefinition<BEA
     }
 
     /**
-     * Removes the definition.
+     * Removes a property definition.
      *
      * @param _id
      *            the _id
      * @return the generic bean definition
      */
-    public GenericBeanDefinition<BEANTYPE> removeDefinition(final Object _id)
+    public GenericBeanDefinition<BEANTYPE> removePropertyDefinition(final Object _id)
     {
         id2DefinitionMap.remove(_id);
         return this;
     }
 
     /**
-     * Removes the all definitions.
+     * Removes all property definitions.
      *
      * @return the generic bean definition
      */
-    public GenericBeanDefinition<BEANTYPE> removeAllDefinitions()
+    public GenericBeanDefinition<BEANTYPE> removeAllPropertyDefinitions()
     {
         id2DefinitionMap.clear();
         return this;

@@ -62,14 +62,18 @@ public interface QueryDefinition<BEANTYPE> extends Serializable
     public Object getAdditionalParameter(final Object _key);
 
     /**
-     * Gets the sort property ids.
+     * Gets the sort property ids.<br>
+     * <br>
+     * <b>ATTENTION!<b> It is not allowed to modify the content of the array!
      *
      * @return the sort property ids
      */
     public Object[] getSortPropertyIds();
 
     /**
-     * Gets the sort property acending states.
+     * Gets the sort property acending states.<br>
+     * <br>
+     * <b>ATTENTION!<b> It is not allowed to modify the content of the array!
      *
      * @return the sort property acending states
      */

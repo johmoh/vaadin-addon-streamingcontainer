@@ -22,8 +22,10 @@ public class Entity implements Serializable
     /**
      * Instantiates a new entity.
      *
-     * @param _id the _id
-     * @param _text the _text
+     * @param _id
+     *            the _id
+     * @param _text
+     *            the _text
      */
     public Entity(final int _id, final String _text)
     {

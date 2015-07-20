@@ -17,14 +17,26 @@ public abstract class AbstractQuery<BEANTYPE> implements Query<BEANTYPE>
     /** The query definition. */
     private final QueryDefinition<BEANTYPE> queryDefinition;
 
-    /** The additional filter. */
+    /**
+     * The additional filter.<br>
+     * <br>
+     * <b>ATTENTION!<b> It is not allowed to modify the content of this array!
+     */
     private final Filter[] additionalFilters;
 
-    /** The sort property ids. */
+    /**
+     * The sort property ids.<br>
+     * <br>
+     * <b>ATTENTION!<b> It is not allowed to modify the content of this array!
+     */
     private final Object[] sortPropertyIds;
 
-    /** The sort property acending states. */
-    private final boolean[] sortPropertyAcendingStates;
+    /**
+     * The sort property ascending states.<br>
+     * <br>
+     * <b>ATTENTION!<b> It is not allowed to modify the content of this array!
+     */
+    private final boolean[] sortPropertyAscendingStates;
 
     /**
      * Instantiates a new abstract query.
@@ -35,33 +47,39 @@ public abstract class AbstractQuery<BEANTYPE> implements Query<BEANTYPE>
      *            the _additional filter
      * @param _sortPropertyIds
      *            the _sort property ids
-     * @param _sortPropertyAcendingStates
-     *            the _sort property acending states
-     * @throws IllegalArgumentException
-     *             the illegal argument exception
+     * @param _sortPropertyAscendingStates
+     *            the _sort property ascending states
      */
     protected AbstractQuery(final QueryDefinition<BEANTYPE> _queryDefinition,
                             final Filter[] _additionalFilters,
                             final Object[] _sortPropertyIds,
-                            final boolean[] _sortPropertyAcendingStates)
-        throws IllegalArgumentException
+                            final boolean[] _sortPropertyAscendingStates)
     {
         if (null == _queryDefinition) {
-            throw new IllegalArgumentException("Parameter '_queryDefinition' is null");
+            throw new NullPointerException("_queryDefinition is NULL");
         }
-        final int numSortPropertyIds = ((null == _sortPropertyIds) ? 0 : _sortPropertyIds.length);
-        final int numSortPropertyAcendingStates = ((null == _sortPropertyAcendingStates) ? 0
-                : _sortPropertyAcendingStates.length);
-        if (numSortPropertyIds != numSortPropertyAcendingStates) {
+        if (null == _additionalFilters) {
+            throw new NullPointerException("_additionalFilter is NULL");
+        }
+        if ((null == _sortPropertyIds) != (null == _sortPropertyAscendingStates)) {
             throw new IllegalArgumentException(
-                    "Array parameters '_sortPropertyIds' and '_sortPropertyAcendingStates' contain a different number of values");
+                    "One array is NULL and the other is not (_sortPropertyIds, _sortPropertyAscendingStates)");
+        }
+        if ((null != _sortPropertyIds) && (_sortPropertyIds.length != _sortPropertyAscendingStates.length)) {
+            throw new IllegalArgumentException(
+                    "Arrays have diffenent size (_sortPropertyIds, _sortPropertyAscendingStates)");
         }
 
         this.queryDefinition = _queryDefinition;
         this.additionalFilters = (null != _additionalFilters ? _additionalFilters : Constants.EMPTY_ADDITIONAL_FILTERS);
-        this.sortPropertyIds = ((numSortPropertyIds > 0) ? _sortPropertyIds : Constants.EMPTY_SORT_PROPERTY_IDS);
-        this.sortPropertyAcendingStates = ((numSortPropertyAcendingStates > 0) ? _sortPropertyAcendingStates
-                : Constants.EMPTY_SORT_PROPERTY_ASCENDING_STATES);
+        if (null != _sortPropertyIds) {
+            this.sortPropertyIds = _sortPropertyIds;
+            this.sortPropertyAscendingStates = _sortPropertyAscendingStates;
+        }
+        else {
+            this.sortPropertyIds = _queryDefinition.getSortPropertyIds();
+            this.sortPropertyAscendingStates = _queryDefinition.getSortPropertyAcendingStates();
+        }
     }
 
     /**
@@ -92,7 +110,9 @@ public abstract class AbstractQuery<BEANTYPE> implements Query<BEANTYPE>
     }
 
     /**
-     * Gets the additional filters.
+     * Gets the additional filters.<br>
+     * <br>
+     * <b>ATTENTION!<b> It is not allowed to modify the content of the array!
      *
      * @return the additional filters
      */
@@ -102,7 +122,9 @@ public abstract class AbstractQuery<BEANTYPE> implements Query<BEANTYPE>
     }
 
     /**
-     * Gets the sort property ids.
+     * Gets the sort property ids.<br>
+     * <br>
+     * <b>ATTENTION!<b> It is not allowed to modify the content of the array!
      *
      * @return the sort property ids
      */
@@ -112,12 +134,14 @@ public abstract class AbstractQuery<BEANTYPE> implements Query<BEANTYPE>
     }
 
     /**
-     * Gets the sort property acending states.
+     * Gets the sort property ascending states.<br>
+     * <br>
+     * <b>ATTENTION!<b> It is not allowed to modify the content of the array!
      *
-     * @return the sort property acending states
+     * @return the sort property ascending states
      */
-    public boolean[] getSortPropertyAcendingStates()
+    public boolean[] getSortPropertyAscendingStates()
     {
-        return sortPropertyAcendingStates;
+        return sortPropertyAscendingStates;
     }
 }

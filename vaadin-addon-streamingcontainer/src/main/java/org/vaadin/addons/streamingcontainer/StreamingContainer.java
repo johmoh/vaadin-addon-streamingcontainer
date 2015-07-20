@@ -58,4 +58,11 @@ public interface StreamingContainer<BEANTYPE>
      * @return the boolean
      */
     public Boolean hasMore();
+
+    /**
+     * Checks for container filters.
+     *
+     * @return true, if successful
+     */
+    public boolean hasContainerFilters();
 }

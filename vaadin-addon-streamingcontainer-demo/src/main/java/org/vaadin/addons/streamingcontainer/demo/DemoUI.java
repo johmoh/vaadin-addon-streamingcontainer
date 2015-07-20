@@ -6,9 +6,9 @@ import org.vaadin.addons.streamingcontainer.BeanDefinition;
 import org.vaadin.addons.streamingcontainer.GenericBeanDefinition;
 import org.vaadin.addons.streamingcontainer.GenericQueryDefinition;
 import org.vaadin.addons.streamingcontainer.GenericQueryFactory;
+import org.vaadin.addons.streamingcontainer.LazyStreamingContainer;
 import org.vaadin.addons.streamingcontainer.QueryDefinition;
 import org.vaadin.addons.streamingcontainer.QueryFactory;
-import org.vaadin.addons.streamingcontainer.LazyStreamingContainer;
 import org.vaadin.addons.streamingcontainer.StreamingContainer;
 
 import com.vaadin.annotations.Theme;
@@ -52,7 +52,7 @@ public class DemoUI extends UI
     protected void init(final VaadinRequest request)
     {
         final BeanDefinition<Entity> beanDefinition = new GenericBeanDefinition<Entity>(Entity.class)
-            .addOrSetDefinitionsFromType()
+            .addOrSetPropertyDefinitionsFromType()
             .setIdPropertyId("id");
         final QueryDefinition<Entity> queryDefinition = new GenericQueryDefinition<Entity>(beanDefinition)
             .setBatchSizeHint(2547)

@@ -23,6 +23,10 @@ public abstract class AbstractQueryFactory<BEANTYPE> implements QueryFactory<BEA
      */
     protected AbstractQueryFactory(final Class<? extends Query<BEANTYPE>> _queryType)
     {
+        if (null == _queryType) {
+            throw new NullPointerException("_queryType is NULL");
+        }
+
         this.queryType = _queryType;
     }
 

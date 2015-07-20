@@ -27,12 +27,12 @@ public interface QueryFactory<BEANTYPE>
      *            the _additional filters
      * @param _sortPropertyIds
      *            the _sort property ids
-     * @param _sortPropertyAcendingStates
-     *            the _sort property acending states
+     * @param _sortPropertyAscendingStates
+     *            the _sort property ascending states
      * @return the query< beantyp e>
      */
     public Query<BEANTYPE> createQuery(final QueryDefinition<BEANTYPE> _queryDefinition,
                                        final Filter[] _additionalFilters,
                                        final Object[] _sortPropertyIds,
-                                       final boolean[] _sortPropertyAcendingStates);
+                                       final boolean[] _sortPropertyAscendingStates);
 }

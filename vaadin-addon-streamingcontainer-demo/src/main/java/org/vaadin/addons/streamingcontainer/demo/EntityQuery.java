@@ -4,10 +4,11 @@
 package org.vaadin.addons.streamingcontainer.demo;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 import org.vaadin.addons.streamingcontainer.AbstractQuery;
+import org.vaadin.addons.streamingcontainer.GenericQueryResult;
 import org.vaadin.addons.streamingcontainer.QueryDefinition;
+import org.vaadin.addons.streamingcontainer.QueryResult;
 
 import com.vaadin.data.Container.Filter;
 
@@ -59,15 +60,15 @@ public class EntityQuery extends AbstractQuery<Entity>
     }
 
     /**
-     * @see org.vaadin.test.web.prototype2.IStreamedReadingQuery#readNext(int)
+     * @see org.vaadin.addons.streamingcontainer.Query#readNext(int)
      */
     @Override
-    public Collection<Entity> readNext(final int _maxNumberOfObjects)
+    public QueryResult<Entity> readNext(final int _maxNumberOfObjects)
     {
         System.out.println("CALL [" + this.hashCode() + "] EntityQuery.readNext(" + _maxNumberOfObjects + ")");
-        final ArrayList<Entity> result;
+        final ArrayList<Entity> newEntities;
         if (_maxNumberOfObjects <= 0) {
-            result = null;
+            newEntities = null;
         }
         else {
             if (!initialized) {
@@ -78,14 +79,14 @@ public class EntityQuery extends AbstractQuery<Entity>
             System.out.println("NOTE [" + this.hashCode()
                     + "] EntityQuery.readNext(...) -> SIMULATE LOAD NEXT ENTITIES");
             final int numberOfEntitiesToLoad = Math.min(_maxNumberOfObjects, MAX_NUMBER_OF_ENTITIES - entityCounter);
-            result = new ArrayList<Entity>(numberOfEntitiesToLoad);
+            newEntities = new ArrayList<Entity>(numberOfEntitiesToLoad);
             int i = 0;
             while (i < numberOfEntitiesToLoad) {
                 ++i;
 
                 final int id = entityCounter + i;
                 final Entity entity = new Entity(id, "Entity #" + id);
-                result.add(entity);
+                newEntities.add(entity);
 
                 if (i >= MAX_BATCH_SIZE) {
                     break;
@@ -94,17 +95,9 @@ public class EntityQuery extends AbstractQuery<Entity>
             entityCounter += i;
         }
 
-        return result;
-    }
+        final boolean hasMore = (entityCounter < MAX_NUMBER_OF_ENTITIES);
 
-    /**
-     * @see org.vaadin.test.web.prototype2.IStreamedReadingQuery#hasMore()
-     */
-    @Override
-    public boolean hasMore()
-    {
-        System.out.println("CALL [" + this.hashCode() + "] EntityQuery.hasMore()");
-        final boolean result = ((entityCounter < MAX_NUMBER_OF_ENTITIES) && (!initialized || !streamClosed));
+        final QueryResult<Entity> result = new GenericQueryResult<Entity>(newEntities, hasMore);
         return result;
     }
 
