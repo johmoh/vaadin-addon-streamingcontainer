@@ -232,8 +232,7 @@ public abstract class AbstractStreamingContainer<BEANTYPE> implements StreamingC
     /**
      * <b>NOT SUPPORTED!<b> <br>
      * <br>
-     * {@inheritDoc com.vaadin.data.Container.Indexed#addItemAt(int,
-     * java.lang.Object)}
+     * {@inheritDoc com.vaadin.data.Container.Indexed#addItemAt(int, java.lang.Object)}
      */
     @Override
     @Deprecated
@@ -246,8 +245,7 @@ public abstract class AbstractStreamingContainer<BEANTYPE> implements StreamingC
     /**
      * <b>NOT SUPPORTED!<b> <br>
      * <br>
-     * {@inheritDoc
-     * com.vaadin.data.Container.Ordered#addItemAfter(java.lang.Object)}
+     * {@inheritDoc com.vaadin.data.Container.Ordered#addItemAfter(java.lang.Object)}
      */
     @Override
     @Deprecated
@@ -260,9 +258,7 @@ public abstract class AbstractStreamingContainer<BEANTYPE> implements StreamingC
     /**
      * <b>NOT SUPPORTED!<b> <br>
      * <br>
-     * {@inheritDoc
-     * com.vaadin.data.Container.Ordered#addItemAfter(java.lang.Object,
-     * java.lang.Object)}
+     * {@inheritDoc com.vaadin.data.Container.Ordered#addItemAfter(java.lang.Object, java.lang.Object)}
      */
     @Override
     @Deprecated
@@ -406,8 +402,7 @@ public abstract class AbstractStreamingContainer<BEANTYPE> implements StreamingC
     }
 
     /**
-     * @see com.vaadin.data.Container#getContainerProperty(java.lang.Object,
-     *      java.lang.Object)
+     * @see com.vaadin.data.Container#getContainerProperty(java.lang.Object, java.lang.Object)
      */
     @Override
     public Property<?> getContainerProperty(final Object _itemId, final Object _propertyId)
@@ -433,9 +428,7 @@ public abstract class AbstractStreamingContainer<BEANTYPE> implements StreamingC
     /**
      * <b>NOT SUPPORTED!<b> <br>
      * <br>
-     * {@inheritDoc
-     * com.vaadin.data.Container#addContainerProperty(java.lang.Object,
-     * java.lang.Class, java.lang.Object)}
+     * {@inheritDoc com.vaadin.data.Container#addContainerProperty(java.lang.Object, java.lang.Class, java.lang.Object)}
      */
     @Override
     @Deprecated
@@ -448,8 +441,7 @@ public abstract class AbstractStreamingContainer<BEANTYPE> implements StreamingC
     /**
      * <b>NOT SUPPORTED!<b> <br>
      * <br>
-     * {@inheritDoc
-     * com.vaadin.data.Container#removeContainerProperty(java.lang.Object)}
+     * {@inheritDoc com.vaadin.data.Container#removeContainerProperty(java.lang.Object)}
      */
     @Override
     @Deprecated

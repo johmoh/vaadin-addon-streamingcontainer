@@ -71,13 +71,13 @@ public interface QueryDefinition<BEANTYPE> extends Serializable
     public Object[] getSortPropertyIds();
 
     /**
-     * Gets the sort property acending states.<br>
+     * Gets the sort property ascending states.<br>
      * <br>
      * <b>ATTENTION!<b> It is not allowed to modify the content of the array!
      *
-     * @return the sort property acending states
+     * @return the sort property ascending states
      */
-    public boolean[] getSortPropertyAcendingStates();
+    public boolean[] getSortPropertyAscendingStates();
 
     /**
      * Gets the filters.

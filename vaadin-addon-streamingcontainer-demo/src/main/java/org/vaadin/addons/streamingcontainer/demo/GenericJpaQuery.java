@@ -1,19 +1,15 @@
 package org.vaadin.addons.streamingcontainer.demo;
 
-import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 
 import org.vaadin.addons.streamingcontainer.AbstractQuery;
 import org.vaadin.addons.streamingcontainer.BeanDefinition;
 import org.vaadin.addons.streamingcontainer.GenericQueryResult;
+import org.vaadin.addons.streamingcontainer.Query;
 import org.vaadin.addons.streamingcontainer.QueryDefinition;
 import org.vaadin.addons.streamingcontainer.QueryResult;
 
@@ -21,12 +17,12 @@ import com.vaadin.data.Container.Filter;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class JpaQuery.
+ * The Class GenericJpaQuery.
  *
  * @param <BEANTYPE>
  *            the generic type
  */
-public class JpaQuery<BEANTYPE> extends AbstractQuery<BEANTYPE>
+public class GenericJpaQuery<BEANTYPE> extends AbstractQuery<BEANTYPE>
 {
     /** The entity manager. */
     private final EntityManager entityManager;
@@ -37,8 +33,8 @@ public class JpaQuery<BEANTYPE> extends AbstractQuery<BEANTYPE>
     /** The last has more. */
     private boolean lastHasMore = false;
 
-    /** The next start id. */
-    private Object nextStartId = null;
+    /** The next first row num. */
+    private int nextFirstRowNumber = 0;
 
     /**
      * Instantiates a new jpa query.
@@ -54,11 +50,11 @@ public class JpaQuery<BEANTYPE> extends AbstractQuery<BEANTYPE>
      * @param _sortPropertyAscendingStates
      *            the _sort property ascending states
      */
-    public JpaQuery(final EntityManager _entityManager,
-                    final QueryDefinition<BEANTYPE> _queryDefinition,
-                    final Filter[] _additionalFilters,
-                    final Object[] _sortPropertyIds,
-                    final boolean[] _sortPropertyAscendingStates)
+    public GenericJpaQuery(final EntityManager _entityManager,
+                           final QueryDefinition<BEANTYPE> _queryDefinition,
+                           final Filter[] _additionalFilters,
+                           final Object[] _sortPropertyIds,
+                           final boolean[] _sortPropertyAscendingStates)
     {
         super(_queryDefinition, _additionalFilters, _sortPropertyIds, _sortPropertyAscendingStates);
 
@@ -69,6 +65,16 @@ public class JpaQuery<BEANTYPE> extends AbstractQuery<BEANTYPE>
         }
 
         this.entityManager = _entityManager;
+    }
+
+    /**
+     * Gets the entity manager.
+     *
+     * @return the entity manager
+     */
+    public EntityManager getEntityManager()
+    {
+        return entityManager;
     }
 
     /**
@@ -93,61 +99,52 @@ public class JpaQuery<BEANTYPE> extends AbstractQuery<BEANTYPE>
             final BeanDefinition<BEANTYPE> beanDefinition = queryDefinition.getBeanDefinition();
             final Class<BEANTYPE> beanType = beanDefinition.getType();
             final Object idPropertyId = beanDefinition.getIdPropertyId();
-
-            final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-            CriteriaQuery<BEANTYPE> criteriaQuery = criteriaBuilder.createQuery(beanType);
-            final Root<BEANTYPE> from = criteriaQuery.from(beanType);
-            criteriaQuery //
-                .select(from);
-
-            final boolean automaticOrderById = ((null != idPropertyId) && (idPropertyId instanceof String));
-            final String idPropertyIdAsString = (automaticOrderById ? (String) idPropertyId : null);
-            if (automaticOrderById && (null != nextStartId)) {
-                final Expression<Comparable<Object>> idPropertyExpression = from.get(idPropertyIdAsString);
-                @SuppressWarnings("unchecked")
-                final Comparable<Object> nextIdPropertyStartValue = (Comparable<Object>) nextStartId;
-                final Predicate nextIdPropertyPredicate = criteriaBuilder.greaterThanOrEqualTo(idPropertyExpression,
-                        nextIdPropertyStartValue);
-                criteriaQuery.where(nextIdPropertyPredicate);
+            final String idPropertyIdAsString = ((null == idPropertyId) ? null : idPropertyId.toString());
+            final Collection<Filter> fixedFilters = queryDefinition.getFilters();
+            final Filter[] additionalFilters = getAdditionalFilters();
+            final Object[] sortPropertyIds;
+            final boolean[] sortPropertyAscendingStates;
+            if (null != getSortPropertyIds()) {
+                sortPropertyIds = getSortPropertyIds();
+                sortPropertyAscendingStates = getSortPropertyAscendingStates();
+            }
+            else {
+                sortPropertyIds = queryDefinition.getSortPropertyIds();
+                sortPropertyAscendingStates = queryDefinition.getSortPropertyAscendingStates();
             }
 
-            if (automaticOrderById) {
-                criteriaQuery.orderBy(criteriaBuilder.asc(from.get((idPropertyIdAsString))));
-            }
+            final int maxNumberOfObjectsPlusOne = Math.max(0, _maxNumberOfObjects + 1); // +1 for "has more"
+            // functionality
+            final TypedQuery<BEANTYPE> query = JpaUtility.<BEANTYPE> getInstance().buildQuery( //
+                    beanType, //
+                    idPropertyIdAsString, //
+                    fixedFilters, //
+                    additionalFilters, //
+                    sortPropertyIds, //
+                    sortPropertyAscendingStates, //
+                    nextFirstRowNumber, //
+                    maxNumberOfObjectsPlusOne, //
+                    entityManager //
+                );
 
-            final TypedQuery<BEANTYPE> query = entityManager.createQuery(criteriaQuery);
-            query.setMaxResults(_maxNumberOfObjects + 1); // + 1 for hasMore
-                                                          // functionality
             final List<BEANTYPE> queryResult = query.getResultList();
             final int queryResultSize = (queryResult.isEmpty() ? 0 : queryResult.size());
-            hasMore = (queryResultSize > _maxNumberOfObjects);
-            if (!hasMore) {
+            if (queryResultSize <= _maxNumberOfObjects) {
                 personList = queryResult;
+                hasMore = false;
                 closeStream();
             }
             else {
                 personList = queryResult.subList(0, _maxNumberOfObjects);
-
-                if (automaticOrderById) {
-                    final BEANTYPE firstBeanForNextQuery = queryResult.get(_maxNumberOfObjects);
-                    try {
-                        final Field field = firstBeanForNextQuery.getClass().getDeclaredField(idPropertyIdAsString);
-                        if (!field.isAccessible()) {
-                            field.setAccessible(true);
-                        }
-                        nextStartId = field.get(firstBeanForNextQuery);
-                    }
-                    catch (final Exception _ex) {
-                        throw new RuntimeException(_ex);
-                    }
-                }
+                hasMore = true;
+                nextFirstRowNumber += _maxNumberOfObjects;
             }
 
             lastHasMore = hasMore;
         }
 
         System.out.println("NOTE [" + this.hashCode() + "] JpaQuery.readNext(...): hasMore=" + hasMore
-                + " nextStartId=" + nextStartId);
+                + " nextFirstRowNumber=" + nextFirstRowNumber);
 
         final QueryResult<BEANTYPE> result = new GenericQueryResult<BEANTYPE>(personList, hasMore);
         return result;
@@ -161,7 +158,7 @@ public class JpaQuery<BEANTYPE> extends AbstractQuery<BEANTYPE>
     {
         System.out.println("CALL [" + this.hashCode() + "] JpaQuery.closeStream()");
         if (!Boolean.TRUE.equals(streamClosed)) {
-            nextStartId = null;
+            nextFirstRowNumber = -1;
             streamClosed = Boolean.TRUE;
         }
     }

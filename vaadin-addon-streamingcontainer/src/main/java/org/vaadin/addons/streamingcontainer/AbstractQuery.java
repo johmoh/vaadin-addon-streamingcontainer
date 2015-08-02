@@ -78,7 +78,7 @@ public abstract class AbstractQuery<BEANTYPE> implements Query<BEANTYPE>
         }
         else {
             this.sortPropertyIds = _queryDefinition.getSortPropertyIds();
-            this.sortPropertyAscendingStates = _queryDefinition.getSortPropertyAcendingStates();
+            this.sortPropertyAscendingStates = _queryDefinition.getSortPropertyAscendingStates();
         }
     }
 

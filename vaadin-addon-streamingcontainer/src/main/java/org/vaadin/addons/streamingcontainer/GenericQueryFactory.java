@@ -9,7 +9,10 @@ import com.vaadin.data.Container.Filter;
 
 // TODO: Auto-generated Javadoc
 /**
- * @author johmoh
+ * A generic factory for creating Query objects.
+ *
+ * @param <BEANTYPE>
+ *            the generic type
  */
 public final class GenericQueryFactory<BEANTYPE> extends AbstractQueryFactory<BEANTYPE>
 {

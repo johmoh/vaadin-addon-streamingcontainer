@@ -178,6 +178,31 @@ public final class GenericBeanDefinition<BEANTYPE> implements BeanDefinition<BEA
     }
 
     /**
+     * Gets the as generic property definition.
+     *
+     * @param _id
+     *            the _id
+     * @return the as generic property definition
+     */
+    public GenericBeanPropertyDefinition getAsGenericPropertyDefinition(final Object _id)
+    {
+        final GenericBeanPropertyDefinition result;
+        final BeanPropertyDefinition definition = getPropertyDefinition(_id);
+        if (null == definition) {
+            result = null;
+        }
+        else if (definition instanceof GenericBeanPropertyDefinition) {
+            result = (GenericBeanPropertyDefinition) definition;
+        }
+        else {
+            result = new GenericBeanPropertyDefinition(definition);
+            addOrSetPropertyDefinition(result);
+        }
+
+        return result;
+    }
+
+    /**
      * Adds the or set a property definition.
      *
      * @param _definition
@@ -192,8 +217,7 @@ public final class GenericBeanDefinition<BEANTYPE> implements BeanDefinition<BEA
     }
 
     /**
-     * Adds the or set property definitions of all properties of the type (see
-     * {@link #getType()}).
+     * Adds the or set property definitions of all properties of the type (see {@link #getType()}).
      *
      * @return the generic bean definition
      */

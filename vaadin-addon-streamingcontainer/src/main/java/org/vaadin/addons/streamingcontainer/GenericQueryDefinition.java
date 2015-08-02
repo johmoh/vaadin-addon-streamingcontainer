@@ -42,11 +42,11 @@ public final class GenericQueryDefinition<BEANTYPE> implements QueryDefinition<B
     public Object[] sortPropertyIds;
 
     /**
-     * The sort property acending states.<br>
+     * The sort property ascending states.<br>
      * <br>
      * <b>ATTENTION!<b> It is not allowed to modify the content of the array!
      */
-    public boolean[] sortPropertyAcendingStates;
+    public boolean[] sortPropertyAscendingStates;
 
     /** The filters. */
     public ArrayList<Filter> filters;
@@ -63,7 +63,7 @@ public final class GenericQueryDefinition<BEANTYPE> implements QueryDefinition<B
         this.batchSizeHint = Defaults.DEFAULT_BATCH_SIZE_HINT;
         this.maxQuerySizeHint = Defaults.DEFAULT_MAX_QUERY_SIZE_HINT;
         this.sortPropertyIds = Constants.EMPTY_SORT_PROPERTY_IDS;
-        this.sortPropertyAcendingStates = Constants.EMPTY_SORT_PROPERTY_ASCENDING_STATES;
+        this.sortPropertyAscendingStates = Constants.EMPTY_SORT_PROPERTY_ASCENDING_STATES;
         this.filters = new ArrayList<Filter>();
     }
 
@@ -79,7 +79,7 @@ public final class GenericQueryDefinition<BEANTYPE> implements QueryDefinition<B
         this.batchSizeHint = _prototype.getBatchSizeHint();
         this.maxQuerySizeHint = _prototype.getMaxQuerySizeHint();
         this.sortPropertyIds = _prototype.getSortPropertyIds();
-        this.sortPropertyAcendingStates = _prototype.getSortPropertyAcendingStates();
+        this.sortPropertyAscendingStates = _prototype.getSortPropertyAscendingStates();
         this.filters = new ArrayList<Filter>();
         this.filters.addAll(_prototype.getFilters());
     }
@@ -229,12 +229,12 @@ public final class GenericQueryDefinition<BEANTYPE> implements QueryDefinition<B
     }
 
     /**
-     * @see org.vaadin.addons.streamingcontainer.QueryDefinition#getSortPropertyAcendingStates()
+     * @see org.vaadin.addons.streamingcontainer.QueryDefinition#getSortPropertyAscendingStates()
      */
     @Override
-    public boolean[] getSortPropertyAcendingStates()
+    public boolean[] getSortPropertyAscendingStates()
     {
-        return sortPropertyAcendingStates;
+        return sortPropertyAscendingStates;
     }
 
     /**
@@ -259,7 +259,7 @@ public final class GenericQueryDefinition<BEANTYPE> implements QueryDefinition<B
         }
 
         sortPropertyIds = _sortPropertyIds;
-        sortPropertyAcendingStates = _sortPropertyAcendingStates;
+        sortPropertyAscendingStates = _sortPropertyAcendingStates;
         return this;
     }
 

@@ -39,6 +39,12 @@ public class LazyStreamingContainer<BEANTYPE> extends AbstractStreamingContainer
     /** The load till end of stream on initialization. */
     private boolean loadTillEndOfStreamOnInitialization = false;
 
+    /** The sort property ids. */
+    private Object[] sortPropertyIds = null;
+
+    /** The sort property ascending states. */
+    private boolean[] sortPropertyAscendingStates = null;
+
     /** The index2item list. */
     private final ArrayList<Item> index2itemList = new ArrayList<Item>();
 
@@ -104,10 +110,10 @@ public class LazyStreamingContainer<BEANTYPE> extends AbstractStreamingContainer
         final QueryFactory<BEANTYPE> queryFactory = getQueryFactory();
         final QueryDefinition<BEANTYPE> queryDefinition = getQueryDefinition();
         query = queryFactory.createQuery( //
-                queryDefinition, // additionalFilters
+                queryDefinition, //
                 additionalFilters, //
-                Constants.EMPTY_SORT_PROPERTY_IDS, //
-                Constants.EMPTY_SORT_PROPERTY_ASCENDING_STATES //
+                sortPropertyIds, //
+                sortPropertyAscendingStates //
             );
 
         if (null == query) {
@@ -562,8 +568,7 @@ public class LazyStreamingContainer<BEANTYPE> extends AbstractStreamingContainer
      *************************************************************************/
 
     /**
-     * @see com.vaadin.data.Container.Sortable#sort(java.lang.Object[],
-     *      boolean[])
+     * @see com.vaadin.data.Container.Sortable#sort(java.lang.Object[], boolean[])
      */
     @Override
     public void sort(final Object[] _sortPropertyIds, final boolean[] _sortPropertyAscendingStates)
@@ -577,8 +582,22 @@ public class LazyStreamingContainer<BEANTYPE> extends AbstractStreamingContainer
                     "Arrays have diffenent size (_sortPropertyIds, _sortPropertyAscendingStates)");
         }
 
-        // TODO
-        refresh();
+        if (null == _sortPropertyIds) {
+            sortPropertyIds = null;
+            sortPropertyAscendingStates = null;
+        }
+        else if (_sortPropertyIds.length == 0) {
+            sortPropertyIds = Constants.EMPTY_SORT_PROPERTY_IDS;
+            sortPropertyAscendingStates = Constants.EMPTY_SORT_PROPERTY_ASCENDING_STATES;
+        }
+        else {
+            sortPropertyIds = _sortPropertyIds;
+            sortPropertyAscendingStates = _sortPropertyAscendingStates;
+        }
+
+        if (initialized) {
+            refresh();
+        }
     }
 
     /**
