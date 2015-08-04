@@ -10,6 +10,7 @@
 
 	<modules>
 		<module>vaadin-addon-streamingcontainer</module>
+		<module>vaadin-addon-streamingcontainer-jpa</module>
 		<module>vaadin-addon-streamingcontainer-demo</module>
 	</modules>
 

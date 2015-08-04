@@ -22,7 +22,7 @@ public final class GenericQueryFactory<BEANTYPE> extends AbstractQueryFactory<BE
      * @param _queryType
      *            the _query type
      */
-    public GenericQueryFactory(final Class<? extends Query<BEANTYPE>> _queryType)
+    public GenericQueryFactory(final Class<? extends AbstractQuery<BEANTYPE>> _queryType)
     {
         super(_queryType);
     }

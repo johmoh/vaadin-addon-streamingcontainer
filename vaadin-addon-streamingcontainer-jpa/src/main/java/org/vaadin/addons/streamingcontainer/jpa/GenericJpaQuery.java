@@ -1,4 +1,4 @@
-package org.vaadin.addons.streamingcontainer.demo;
+package org.vaadin.addons.streamingcontainer.jpa;
 
 import java.util.Collection;
 import java.util.List;
@@ -6,10 +6,8 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
-import org.vaadin.addons.streamingcontainer.AbstractQuery;
 import org.vaadin.addons.streamingcontainer.BeanDefinition;
 import org.vaadin.addons.streamingcontainer.GenericQueryResult;
-import org.vaadin.addons.streamingcontainer.Query;
 import org.vaadin.addons.streamingcontainer.QueryDefinition;
 import org.vaadin.addons.streamingcontainer.QueryResult;
 
@@ -22,11 +20,8 @@ import com.vaadin.data.Container.Filter;
  * @param <BEANTYPE>
  *            the generic type
  */
-public class GenericJpaQuery<BEANTYPE> extends AbstractQuery<BEANTYPE>
+public class GenericJpaQuery<BEANTYPE> extends AbstractJpaQuery<BEANTYPE>
 {
-    /** The entity manager. */
-    private final EntityManager entityManager;
-
     /** The stream closed. */
     private Boolean streamClosed = null;
 
@@ -51,30 +46,22 @@ public class GenericJpaQuery<BEANTYPE> extends AbstractQuery<BEANTYPE>
      *            the _sort property ascending states
      */
     public GenericJpaQuery(final EntityManager _entityManager,
+                           final JpaTypedQueryBuilder<BEANTYPE> _jpaTypedQueryBuilder,
                            final QueryDefinition<BEANTYPE> _queryDefinition,
                            final Filter[] _additionalFilters,
                            final Object[] _sortPropertyIds,
                            final boolean[] _sortPropertyAscendingStates)
     {
-        super(_queryDefinition, _additionalFilters, _sortPropertyIds, _sortPropertyAscendingStates);
+        super( //
+                _entityManager, //
+                _jpaTypedQueryBuilder, //
+                _queryDefinition, //
+                _additionalFilters, //
+                _sortPropertyIds, //
+                _sortPropertyAscendingStates //
+        );
 
-        System.out.println("CALL [" + this.hashCode() + "] JpaQuery.CONSTRUCTOR()");
-
-        if (null == _entityManager) {
-            throw new NullPointerException("_entityManager is NULL");
-        }
-
-        this.entityManager = _entityManager;
-    }
-
-    /**
-     * Gets the entity manager.
-     *
-     * @return the entity manager
-     */
-    public EntityManager getEntityManager()
-    {
-        return entityManager;
+        System.out.println("CALL [" + this.hashCode() + "] GenericJpaQuery.CONSTRUCTOR()");
     }
 
     /**
@@ -113,9 +100,10 @@ public class GenericJpaQuery<BEANTYPE> extends AbstractQuery<BEANTYPE>
                 sortPropertyAscendingStates = queryDefinition.getSortPropertyAscendingStates();
             }
 
-            final int maxNumberOfObjectsPlusOne = Math.max(0, _maxNumberOfObjects + 1); // +1 for "has more"
-            // functionality
-            final TypedQuery<BEANTYPE> query = JpaUtility.<BEANTYPE> getInstance().buildQuery( //
+            final int maxNumberOfObjectsPlusOne = _maxNumberOfObjects + 1; // +1 for "has more" functionality
+            final EntityManager entityManager = getEntityManager();
+            final JpaTypedQueryBuilder<BEANTYPE> jpaTypedQueryBuilder = getJpaTypedQueryBuilder();
+            final TypedQuery<BEANTYPE> query = jpaTypedQueryBuilder.build( //
                     beanType, //
                     idPropertyIdAsString, //
                     fixedFilters, //

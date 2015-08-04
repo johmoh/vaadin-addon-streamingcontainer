@@ -95,6 +95,11 @@
 			<version>${version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.vaadin.addons.streamingcontainer</groupId>
+			<artifactId>vaadin-addon-streamingcontainer-jpa</artifactId>
+			<version>${version}</version>
+		</dependency>
+		<dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-push</artifactId>
 		</dependency>

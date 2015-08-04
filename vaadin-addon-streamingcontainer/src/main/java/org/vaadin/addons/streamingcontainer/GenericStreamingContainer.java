@@ -17,9 +17,12 @@ import com.vaadin.data.util.filter.UnsupportedFilterException;
 
 // TODO: Auto-generated Javadoc
 /**
- * @author johmoh
+ * The Class GenericStreamingContainer.
+ *
+ * @param <BEANTYPE>
+ *            the generic type
  */
-public class LazyStreamingContainer<BEANTYPE> extends AbstractStreamingContainer<BEANTYPE>
+public class GenericStreamingContainer<BEANTYPE> extends AbstractStreamingContainer<BEANTYPE>
 {
     /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 8027529229449065312L;
@@ -66,8 +69,8 @@ public class LazyStreamingContainer<BEANTYPE> extends AbstractStreamingContainer
      * @param _queryDefinition
      *            the _query definition
      */
-    public LazyStreamingContainer(final QueryFactory<BEANTYPE> _queryFactory,
-                                  final QueryDefinition<BEANTYPE> _queryDefinition)
+    public GenericStreamingContainer(final QueryFactory<BEANTYPE> _queryFactory,
+                                     final QueryDefinition<BEANTYPE> _queryDefinition)
     {
         super(_queryFactory, _queryDefinition);
     }

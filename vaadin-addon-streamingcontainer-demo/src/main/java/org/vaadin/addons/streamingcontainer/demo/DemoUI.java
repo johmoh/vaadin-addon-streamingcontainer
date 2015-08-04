@@ -11,10 +11,11 @@ import javax.servlet.annotation.WebServlet;
 
 import org.vaadin.addons.streamingcontainer.GenericBeanDefinition;
 import org.vaadin.addons.streamingcontainer.GenericQueryDefinition;
-import org.vaadin.addons.streamingcontainer.LazyStreamingContainer;
+import org.vaadin.addons.streamingcontainer.GenericStreamingContainer;
 import org.vaadin.addons.streamingcontainer.QueryDefinition;
 import org.vaadin.addons.streamingcontainer.QueryFactory;
 import org.vaadin.addons.streamingcontainer.StreamingContainer;
+import org.vaadin.addons.streamingcontainer.jpa.GenericJpaQueryFactory;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
@@ -138,7 +139,7 @@ public class DemoUI extends UI
             );
         final EntityManager entityManager = initializeDB();
         final QueryFactory<Person> queryFactory = new GenericJpaQueryFactory<Person>(entityManager);
-        final StreamingContainer<?> container = new LazyStreamingContainer<Person>(queryFactory, queryDefinition);
+        final StreamingContainer<?> container = new GenericStreamingContainer<Person>(queryFactory, queryDefinition);
         final Grid grid = new Grid(container);
         grid.setColumnReorderingAllowed(true);
         grid.setColumnOrder("id", "firstName", "lastName", "age");

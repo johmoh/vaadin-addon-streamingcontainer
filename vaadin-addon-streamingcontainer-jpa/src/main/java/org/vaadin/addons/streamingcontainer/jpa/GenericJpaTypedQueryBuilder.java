@@ -1,4 +1,4 @@
-package org.vaadin.addons.streamingcontainer.demo;
+package org.vaadin.addons.streamingcontainer.jpa;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,38 +27,18 @@ import com.vaadin.data.util.filter.SimpleStringFilter;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class JpaUtility.
+ * The Class GenericJpaTypedQueryBuilder.
  *
  * @param <BEANTYPE>
  *            the generic type
  */
-public class JpaUtility<BEANTYPE>
+public class GenericJpaTypedQueryBuilder<BEANTYPE> implements JpaTypedQueryBuilder<BEANTYPE>
 {
-    /** The instance. */
-    @SuppressWarnings("rawtypes")
-    private static JpaUtility instance = new JpaUtility();
-
-    /**
-     * Gets the single instance of JpaUtility.
-     *
-     * @param <BEANTYPE>
-     *            the generic type
-     * @return single instance of JpaUtility
-     */
-    public static <BEANTYPE> JpaUtility<BEANTYPE> getInstance()
-    {
-        @SuppressWarnings("unchecked")
-        final JpaUtility<BEANTYPE> result = instance;
-        return result;
-    }
-
     /**
      * Instantiates a new jpa utility.
      */
-    private JpaUtility()
+    protected GenericJpaTypedQueryBuilder()
     {
-        // INTENTIONALLY LEFT EMPTY
-        // Note: Constructor only exists to prevent the creation of more objects.
     }
 
     /**
@@ -557,37 +537,20 @@ public class JpaUtility<BEANTYPE>
     }
 
     /**
-     * Builds the query.
-     *
-     * @param _beanType
-     *            the _bean type
-     * @param _idPropertyId
-     *            the _id property id
-     * @param _fixedFilters
-     *            the _fixed filters
-     * @param _additionalFilters
-     *            the _additional filters
-     * @param _sortPropertyIds
-     *            the _sort property ids
-     * @param _sortPropertyAscendingStates
-     *            the _sort property ascending states
-     * @param _firstRowNumber
-     *            the _first row number
-     * @param _maxNumberOfObjects
-     *            the _max number of objects
-     * @param _entityManager
-     *            the _entity manager
-     * @return the typed query
+     * @see org.vaadin.addons.streamingcontainer.jpa.JpaTypedQueryBuilder#build(java.lang.Class, java.lang.String,
+     *      java.util.Collection, com.vaadin.data.Container.Filter[], java.lang.Object[], boolean[], int, int,
+     *      javax.persistence.EntityManager)
      */
-    public TypedQuery<BEANTYPE> buildQuery(final Class<BEANTYPE> _beanType,
-                                           final String _idPropertyId,
-                                           final Collection<Filter> _fixedFilters,
-                                           final Filter[] _additionalFilters,
-                                           final Object[] _sortPropertyIds,
-                                           final boolean[] _sortPropertyAscendingStates,
-                                           final int _firstRowNumber,
-                                           final int _maxNumberOfObjects,
-                                           final EntityManager _entityManager)
+    @Override
+    public TypedQuery<BEANTYPE> build(final Class<BEANTYPE> _beanType,
+                                      final String _idPropertyId,
+                                      final Collection<Filter> _fixedFilters,
+                                      final Filter[] _additionalFilters,
+                                      final Object[] _sortPropertyIds,
+                                      final boolean[] _sortPropertyAscendingStates,
+                                      final int _firstRowNumber,
+                                      final int _maxNumberOfObjects,
+                                      final EntityManager _entityManager)
     {
         if ((null == _sortPropertyIds) != (null == _sortPropertyAscendingStates)) {
             throw new IllegalArgumentException(
