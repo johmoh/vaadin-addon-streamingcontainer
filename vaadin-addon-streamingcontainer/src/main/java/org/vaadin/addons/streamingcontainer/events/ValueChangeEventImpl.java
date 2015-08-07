@@ -1,4 +1,4 @@
-package org.vaadin.addons.streamingcontainer;
+package org.vaadin.addons.streamingcontainer.events;
 
 import com.vaadin.data.Property;
 

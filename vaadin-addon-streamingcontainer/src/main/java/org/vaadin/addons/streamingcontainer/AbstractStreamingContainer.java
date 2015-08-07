@@ -6,6 +6,10 @@ package org.vaadin.addons.streamingcontainer;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.vaadin.addons.streamingcontainer.events.ItemAddEventImpl;
+import org.vaadin.addons.streamingcontainer.events.ItemSetChangeEventImpl;
+import org.vaadin.addons.streamingcontainer.events.PropertySetChangeEventImpl;
+
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;

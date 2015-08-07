@@ -2,6 +2,8 @@ package org.vaadin.addons.streamingcontainer;
 
 import java.util.LinkedList;
 
+import org.vaadin.addons.streamingcontainer.events.ValueChangeEventImpl;
+
 import com.vaadin.data.Property;
 
 // TODO: Auto-generated Javadoc

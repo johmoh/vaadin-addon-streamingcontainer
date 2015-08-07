@@ -1,7 +1,7 @@
 /**
  * @author johmoh
  */
-package org.vaadin.addons.streamingcontainer;
+package org.vaadin.addons.streamingcontainer.events;
 
 import com.vaadin.data.Container;
 
@@ -9,7 +9,7 @@ import com.vaadin.data.Container;
 /**
  * The Class ItemAddEventImpl.
  */
-final class ItemAddEventImpl implements Container.Indexed.ItemAddEvent
+public class ItemAddEventImpl implements Container.Indexed.ItemAddEvent
 {
     /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 5228870505701004514L;

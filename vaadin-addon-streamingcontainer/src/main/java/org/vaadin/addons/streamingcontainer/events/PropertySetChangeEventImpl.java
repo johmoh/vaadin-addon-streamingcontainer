@@ -1,7 +1,7 @@
 /**
  * @author johmoh
  */
-package org.vaadin.addons.streamingcontainer;
+package org.vaadin.addons.streamingcontainer.events;
 
 import com.vaadin.data.Container;
 
@@ -9,7 +9,7 @@ import com.vaadin.data.Container;
 /**
  * The Class PropertySetChangeEventImpl.
  */
-final class PropertySetChangeEventImpl implements Container.PropertySetChangeEvent
+public class PropertySetChangeEventImpl implements Container.PropertySetChangeEvent
 {
     /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 3030407506894550611L;
