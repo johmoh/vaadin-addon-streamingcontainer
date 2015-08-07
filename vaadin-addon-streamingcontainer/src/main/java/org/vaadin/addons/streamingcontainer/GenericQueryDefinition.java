@@ -25,6 +25,9 @@ public final class GenericQueryDefinition<BEANTYPE> implements QueryDefinition<B
     /** The property definition set. */
     private final BeanDefinition<BEANTYPE> beanDefinition;
 
+    /** The initial batch size. */
+    private int initialBatchSize;
+
     /** The batch size hint. */
     private int batchSizeHint;
 
@@ -60,6 +63,7 @@ public final class GenericQueryDefinition<BEANTYPE> implements QueryDefinition<B
     public GenericQueryDefinition(final BeanDefinition<BEANTYPE> _beanDefinition)
     {
         this.beanDefinition = _beanDefinition;
+        this.initialBatchSize = Defaults.DEFAULT_INITIAL_BATCH_SIZE_HINT;
         this.batchSizeHint = Defaults.DEFAULT_BATCH_SIZE_HINT;
         this.maxQuerySizeHint = Defaults.DEFAULT_MAX_QUERY_SIZE_HINT;
         this.sortPropertyIds = Constants.EMPTY_SORT_PROPERTY_IDS;
@@ -94,7 +98,29 @@ public final class GenericQueryDefinition<BEANTYPE> implements QueryDefinition<B
     }
 
     /**
-     * @see org.vaadin.test.web.prototype.QueryDefinition#getBatchSizeHint()
+     * @see org.vaadin.addons.streamingcontainer.QueryDefinition#getInitialBatchSize()
+     */
+    @Override
+    public int getInitialBatchSize()
+    {
+        return initialBatchSize;
+    }
+
+    /**
+     * Sets the initial batch size hint.
+     *
+     * @param _initialBatchSize
+     *            the _initial batch size
+     * @return the generic query definition
+     */
+    public GenericQueryDefinition<BEANTYPE> setInitialBatchSizeHint(final int _initialBatchSize)
+    {
+        this.initialBatchSize = _initialBatchSize;
+        return this;
+    }
+
+    /**
+     * @see org.vaadin.addons.streamingcontainer.QueryDefinition#getBatchSizeHint()
      */
     @Override
     public int getBatchSizeHint()
@@ -116,7 +142,7 @@ public final class GenericQueryDefinition<BEANTYPE> implements QueryDefinition<B
     }
 
     /**
-     * @see org.vaadin.test.web.prototype.QueryDefinition#getMaxQuerySizeHint()
+     * @see org.vaadin.addons.streamingcontainer.QueryDefinition#getMaxQuerySizeHint()
      */
     @Override
     public int getMaxQuerySizeHint()
@@ -138,7 +164,7 @@ public final class GenericQueryDefinition<BEANTYPE> implements QueryDefinition<B
     }
 
     /**
-     * @see org.vaadin.test.web.lazystreamingquerycontainer.QueryDefinition#getAdditionalParameters()
+     * @see org.vaadin.addons.streamingcontainer.QueryDefinition#getAdditionalParameters()
      */
     @Override
     public Map<Object, Object> getAdditionalParameters()
@@ -161,7 +187,7 @@ public final class GenericQueryDefinition<BEANTYPE> implements QueryDefinition<B
     }
 
     /**
-     * @see org.vaadin.test.web.lazystreamingquerycontainer.QueryDefinition#hasAdditionalParameter(java.lang.Object)
+     * @see org.vaadin.addons.streamingcontainer.QueryDefinition#hasAdditionalParameter(java.lang.Object)
      */
     @Override
     public boolean hasAdditionalParameter(final Object _key)
@@ -171,7 +197,7 @@ public final class GenericQueryDefinition<BEANTYPE> implements QueryDefinition<B
     }
 
     /**
-     * @see org.vaadin.test.web.lazystreamingquerycontainer.QueryDefinition#getAdditionalParameter(java.lang.Object)
+     * @see org.vaadin.addons.streamingcontainer.QueryDefinition#getAdditionalParameter(java.lang.Object)
      */
     @Override
     public Object getAdditionalParameter(final Object _key)
@@ -264,7 +290,7 @@ public final class GenericQueryDefinition<BEANTYPE> implements QueryDefinition<B
     }
 
     /**
-     * @see org.vaadin.test.web.prototype.QueryDefinition#getFilters()
+     * @see org.vaadin.addons.streamingcontainer.QueryDefinition#getFilters()
      */
     @Override
     public Collection<Filter> getFilters()

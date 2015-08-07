@@ -23,10 +23,6 @@ public class GenericJpaQueryFactory<BEANTYPE> extends AbstractQueryFactory<BEANT
     @SuppressWarnings("rawtypes")
     private static Class<? extends AbstractJpaQuery> DEFAULT_JPA_QUERY_TYPE = GenericJpaQuery.class;
 
-    /** The default jpa typed query builder. */
-    @SuppressWarnings("rawtypes")
-    private static JpaTypedQueryBuilder DEFAULT_JPA_TYPED_QUERY_BUILDER = new GenericJpaTypedQueryBuilder();
-
     /** The entity manager. */
     private final EntityManager entityManager;
 
@@ -41,8 +37,11 @@ public class GenericJpaQueryFactory<BEANTYPE> extends AbstractQueryFactory<BEANT
      */
     public GenericJpaQueryFactory(final EntityManager _entityManager)
     {
-        this(GenericJpaQueryFactory.<BEANTYPE> getDefaultJpaQueryType(), _entityManager, GenericJpaQueryFactory
-            .<BEANTYPE> getDefaultJpaTypedQueryBuilder());
+        this( //
+                GenericJpaQueryFactory.<BEANTYPE> getDefaultJpaQueryType(), //
+                _entityManager, //
+                GenericJpaTypedQueryBuilder.<BEANTYPE> getInstance() //
+        );
     }
 
     /**
@@ -70,20 +69,6 @@ public class GenericJpaQueryFactory<BEANTYPE> extends AbstractQueryFactory<BEANT
 
         this.entityManager = _entityManager;
         this.jpaTypedQueryBuilder = _jpaTypedQueryBuilder;
-    }
-
-    /**
-     * Gets the default jpa typed query builder.
-     *
-     * @param <BEANTYPE>
-     *            the generic type
-     * @return the default jpa typed query builder
-     */
-    public static <BEANTYPE> JpaTypedQueryBuilder<BEANTYPE> getDefaultJpaTypedQueryBuilder()
-    {
-        @SuppressWarnings("unchecked")
-        final JpaTypedQueryBuilder<BEANTYPE> result = DEFAULT_JPA_TYPED_QUERY_BUILDER;
-        return result;
     }
 
     /**

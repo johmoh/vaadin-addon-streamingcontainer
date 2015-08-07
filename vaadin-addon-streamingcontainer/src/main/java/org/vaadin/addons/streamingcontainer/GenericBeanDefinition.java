@@ -71,7 +71,9 @@ public final class GenericBeanDefinition<BEANTYPE> implements BeanDefinition<BEA
                                  final Object _idPropertyId,
                                  final boolean _addDefinitionsFromType)
     {
-        assert (null == _type);
+        if (null == _type) {
+            throw new NullPointerException("_type is NULL");
+        }
 
         this.type = _type;
         this.idPropertyId = _idPropertyId;
@@ -88,6 +90,10 @@ public final class GenericBeanDefinition<BEANTYPE> implements BeanDefinition<BEA
      */
     public GenericBeanDefinition(final BeanDefinition<BEANTYPE> _prototype)
     {
+        if (null == _prototype) {
+            throw new NullPointerException("_prototype is NULL");
+        }
+
         this.type = _prototype.getType();
         this.idPropertyId = _prototype.getIdPropertyId();
         final Set<Object> idSet = _prototype.getPropertyIds();

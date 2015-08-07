@@ -12,7 +12,6 @@ import org.vaadin.addons.streamingcontainer.Constants.Limits;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
-import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.filter.UnsupportedFilterException;
 
 // TODO: Auto-generated Javadoc
@@ -26,6 +25,9 @@ public class GenericStreamingContainer<BEANTYPE> extends AbstractStreamingContai
 {
     /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 8027529229449065312L;
+
+    /** The item builder. */
+    private final StreamingContainerItemBuilder<BEANTYPE> itemBuilder;
 
     /** The initialized. */
     private boolean initialized = false;
@@ -49,7 +51,7 @@ public class GenericStreamingContainer<BEANTYPE> extends AbstractStreamingContai
     private boolean[] sortPropertyAscendingStates = null;
 
     /** The index2item list. */
-    private final ArrayList<Item> index2itemList = new ArrayList<Item>();
+    private final ArrayList<StreamingContainerItem<BEANTYPE>> index2itemList = new ArrayList<StreamingContainerItem<BEANTYPE>>();
 
     /** The index2item id list. */
     private final ArrayList<Object> index2itemIdList = new ArrayList<Object>();
@@ -70,9 +72,16 @@ public class GenericStreamingContainer<BEANTYPE> extends AbstractStreamingContai
      *            the _query definition
      */
     public GenericStreamingContainer(final QueryFactory<BEANTYPE> _queryFactory,
-                                     final QueryDefinition<BEANTYPE> _queryDefinition)
+                                     final QueryDefinition<BEANTYPE> _queryDefinition,
+                                     final StreamingContainerItemBuilder<BEANTYPE> _itemBuilder)
     {
         super(_queryFactory, _queryDefinition);
+
+        if (null == _itemBuilder) {
+            throw new NullPointerException("_itemBuilder is NULL");
+        }
+
+        this.itemBuilder = _itemBuilder;
     }
 
     /**
@@ -202,18 +211,26 @@ public class GenericStreamingContainer<BEANTYPE> extends AbstractStreamingContai
      */
     private void loadNextItemsFromStream(final boolean _fireItemSetChangedEvent)
     {
-        // System.out.println("CALL LazyStreamingQueryContainer.loadNextItemsFromStream("
-        // + _fireItemSetChangedEvent + ")");
         assert (initialized);
+
         if (endOfStream) {
             return;
         }
 
-        final int size = getNumberOfLoadedItems();
-        final int startIndex = Math.max(0, size);
+        final int numberOfLoadedItems = getNumberOfLoadedItems();
+        assert (numberOfLoadedItems >= 0);
         final QueryDefinition<BEANTYPE> queryDefinition = getQueryDefinition();
-        final int batchSizeHint = Math.max(0, queryDefinition.getBatchSizeHint());
-        loadNextItemsFromStream(startIndex, batchSizeHint, _fireItemSetChangedEvent);
+        final int numberOfItems;
+        if (numberOfLoadedItems == 0) {
+            final int initialBatchSizeHint = Math.max(0, queryDefinition.getInitialBatchSize());
+            numberOfItems = Math.max(initialBatchSizeHint, Limits.MIN_INITIAL_BATCH_SIZE_LIMIT);
+        }
+        else {
+            final int batchSizeHint = Math.max(0, queryDefinition.getBatchSizeHint());
+            numberOfItems = Math.max(batchSizeHint, Limits.MIN_BATCH_SIZE_LIMIT);
+        }
+        assert (numberOfItems >= 0);
+        loadNextItemsFromStream(numberOfItems, _fireItemSetChangedEvent);
     }
 
     /**
@@ -221,48 +238,50 @@ public class GenericStreamingContainer<BEANTYPE> extends AbstractStreamingContai
      * <br>
      * Load next items from stream.
      *
-     * @param _startIndex
-     *            the _start index
      * @param _numberOfItems
      *            the _number of items
      * @param _fireItemSetChangedEvent
      *            the _fire item set changed event
      */
-    private void loadNextItemsFromStream(final int _startIndex,
-                                         final int _numberOfItems,
-                                         final boolean _fireItemSetChangedEvent)
+    private void loadNextItemsFromStream(final int _numberOfItems, final boolean _fireItemSetChangedEvent)
     {
-        // System.out.println("CALL LazyStreamingQueryContainer.loadNextItemsFromStream("
-        // + _startIndex + ", " + _numberOfItems + ", " +
-        // _fireItemSetChangedEvent + ")");
         assert (initialized);
+        if (_numberOfItems < 0) {
+            throw new IllegalArgumentException("_numberOfItems < 0 (_numberOfItems=" + _numberOfItems + ")");
+        }
+
+        // Early exists...
+        if (_numberOfItems == 0) {
+            return;
+        }
         if (endOfStream) {
             return;
         }
 
-        final int size = getNumberOfLoadedItems();
-        final int startIndex = Math.max(0, size);
-        final int startIndexOffset = Math.max(0, _startIndex) - startIndex;
-        final int numberOfItems = Math.max(0, _numberOfItems) + startIndexOffset;
-        if (numberOfItems <= 0) {
-            return;
-        }
-
+        // Calculate maximum number of objects that can be loaded but is lower or equal to "_numberOfItems"
+        final int numberOfLoadedItems = getNumberOfLoadedItems();
+        assert (numberOfLoadedItems >= 0);
         final QueryDefinition<BEANTYPE> queryDefinition = getQueryDefinition();
-        final int batchSizeHint = queryDefinition.getBatchSizeHint();
-        final int batchSizeMin = Math.max(Limits.MIN_BATCH_SIZE_LIMIT, ((startIndex > 0) ? 0
-                : Limits.MIN_INITIAL_BATCH_SIZE_LIMIT));
-        final int batchSize = Math.max(numberOfItems, Math.max(batchSizeHint, batchSizeMin));
+        final int numberOfItems;
+        if (numberOfLoadedItems == 0) {
+            numberOfItems = Math.max(_numberOfItems, Limits.MIN_INITIAL_BATCH_SIZE_LIMIT);
+        }
+        else {
+            numberOfItems = Math.max(_numberOfItems, Limits.MIN_BATCH_SIZE_LIMIT);
+        }
+        assert (numberOfItems >= 0);
         final int maxQuerySizeHint = Math.max(0, queryDefinition.getMaxQuerySizeHint());
         final int maxQuerySize = Math.max(0, Math.min(maxQuerySizeHint, Limits.MAX_NUMBER_OF_ITEMS_LIMIT));
-        final int maxNumberOfItems = Math.max(0, Math.min(startIndex + batchSize, maxQuerySize) - startIndex);
-        System.out.println("CALL LazyStreamingQueryContainer.loadNextItemsFromStream(...): startIndex=" + startIndex
-                + " batchSize=" + batchSize + " maxNumberOfItems=" + maxNumberOfItems);
+        final int maxNumberOfItems = Math.min(numberOfItems, Math.max(0, maxQuerySize - numberOfLoadedItems));
+        assert (maxNumberOfItems >= 0);
+        System.out.println("CALL LazyStreamingQueryContainer.loadNextItemsFromStream(...): numberOfLoadedItems="
+                + numberOfLoadedItems + " numberOfItems=" + numberOfItems + " maxNumberOfItems=" + maxNumberOfItems);
         if (maxNumberOfItems == 0) {
             endStreaming();
             return;
         }
 
+        // Load next objects
         final QueryResult<BEANTYPE> queryResult = query.readNext(maxNumberOfItems);
         final Collection<BEANTYPE> loadedObjects = queryResult.getLoadedObjects();
         if ((null == loadedObjects) || loadedObjects.isEmpty()) {
@@ -276,10 +295,11 @@ public class GenericStreamingContainer<BEANTYPE> extends AbstractStreamingContai
             }
         }
 
-        int idx = startIndex;
+        // Convert loaded objects to items and add items to view
+        final int startIndex = index2itemList.size();
+        int newNumberOfLoadedItems = numberOfLoadedItems;
         boolean maxQuerySizeReached = false;
         final BeanDefinition<BEANTYPE> beanDefinition = queryDefinition.getBeanDefinition();
-        final Class<BEANTYPE> beanType = beanDefinition.getType();
         final Object idPropertyId = beanDefinition.getIdPropertyId();
         for (final BEANTYPE object : loadedObjects) {
             if (maxQuerySizeReached) {
@@ -291,22 +311,22 @@ public class GenericStreamingContainer<BEANTYPE> extends AbstractStreamingContai
                 continue;
             }
 
-            final BeanItem<BEANTYPE> beanItem = ((null == beanType) ? new BeanItem<BEANTYPE>(object)
-                    : new BeanItem<BEANTYPE>(object, beanType));
+            final StreamingContainerItem<BEANTYPE> item = itemBuilder.build(object, beanDefinition);
+            item.setStatus(EStatus.Loaded);
             final Object itemId;
             if (null != idPropertyId) {
-                final Property<?> idProperty = beanItem.getItemProperty(idPropertyId);
+                final Property<?> idProperty = item.getItemProperty(idPropertyId);
                 itemId = idProperty.getValue();
             }
             else {
                 itemId = object;
             }
-            index2itemList.add(beanItem);
+            index2itemList.add(item);
             index2itemIdList.add(itemId);
-            itemId2indexMap.put(itemId, idx);
+            itemId2indexMap.put(itemId, newNumberOfLoadedItems);
 
-            ++idx;
-            if (idx >= maxQuerySize) {
+            ++newNumberOfLoadedItems;
+            if (newNumberOfLoadedItems >= maxQuerySize) {
                 maxQuerySizeReached = true;
             }
         }
@@ -316,7 +336,7 @@ public class GenericStreamingContainer<BEANTYPE> extends AbstractStreamingContai
         }
 
         if (_fireItemSetChangedEvent) {
-            final int numOfAddedItems = idx - startIndex;
+            final int numOfAddedItems = newNumberOfLoadedItems - numberOfLoadedItems;
             fireItemAddEvent(startIndex, numOfAddedItems);
         }
     }
@@ -344,7 +364,7 @@ public class GenericStreamingContainer<BEANTYPE> extends AbstractStreamingContai
         final QueryDefinition<BEANTYPE> queryDefinition = getQueryDefinition();
         final int maxQuerySizeHint = queryDefinition.getMaxQuerySizeHint();
         do {
-            loadNextItemsFromStream(0, maxQuerySizeHint, false);
+            loadNextItemsFromStream(maxQuerySizeHint, false);
             newSize = getNumberOfLoadedItems();
             if (newSize == oldSize) {
                 endStreaming();

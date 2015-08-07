@@ -22,13 +22,14 @@ public final class Constants
          */
         private Limits()
         {
+            // INTENTIONALLY LEFT EMPTY
         }
-
-        /** The Constant MIN_BATCH_SIZE_LIMIT. */
-        public static final int MIN_BATCH_SIZE_LIMIT = 25;
 
         /** The Constant MIN_INITIAL_BATCH_SIZE_LIMIT. */
         public static final int MIN_INITIAL_BATCH_SIZE_LIMIT = 40 + 1;
+
+        /** The Constant MIN_BATCH_SIZE_LIMIT. */
+        public static final int MIN_BATCH_SIZE_LIMIT = 25;
 
         /** The Constant MAX_NUMBER_OF_ITEMS_LIMIT. */
         public static final int MAX_NUMBER_OF_ITEMS_LIMIT = 100000;
@@ -48,10 +49,14 @@ public final class Constants
          */
         private Defaults()
         {
+            // INTENTIONALLY LEFT EMPTY
         }
 
+        /** The Constant DEFAULT_INITIAL_BATCH_SIZE_HINT. */
+        public static final int DEFAULT_INITIAL_BATCH_SIZE_HINT = 100;
+
         /** The Constant DEFAULT_BATCH_SIZE_HINT. */
-        public static final int DEFAULT_BATCH_SIZE_HINT = 100;
+        public static final int DEFAULT_BATCH_SIZE_HINT = DEFAULT_INITIAL_BATCH_SIZE_HINT >> 1;
 
         /** The Constant DEFAULT_MAX_QUERY_SIZE_HINT. */
         public static final int DEFAULT_MAX_QUERY_SIZE_HINT = 5000;
@@ -66,7 +71,14 @@ public final class Constants
      */
     private Constants()
     {
+        // INTENTIONALLY LEFT EMPTY
     }
+
+    /** The Constant STATUS_PROPERTY_ID. */
+    public static final String STATUS_PROPERTY_ID = "$_STATUS_$";
+
+    /** The Constant STATUS_PROPERTY_TYPE. */
+    public static final Class<?> STATUS_PROPERTY_TYPE = EStatus.class;
 
     /** The Constant EMPTY_ADDITIONAL_FILTER. */
     public static final Filter[] EMPTY_ADDITIONAL_FILTERS = new Filter[] {};

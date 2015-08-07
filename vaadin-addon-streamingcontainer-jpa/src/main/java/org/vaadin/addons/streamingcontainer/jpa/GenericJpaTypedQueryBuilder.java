@@ -34,11 +34,30 @@ import com.vaadin.data.util.filter.SimpleStringFilter;
  */
 public class GenericJpaTypedQueryBuilder<BEANTYPE> implements JpaTypedQueryBuilder<BEANTYPE>
 {
+    /** The Constant instance. */
+    @SuppressWarnings("rawtypes")
+    private static final GenericJpaTypedQueryBuilder instance = new GenericJpaTypedQueryBuilder();
+
     /**
      * Instantiates a new jpa utility.
      */
-    protected GenericJpaTypedQueryBuilder()
+    private GenericJpaTypedQueryBuilder()
     {
+        // INTENTIONALLY LEFT BLANK
+    }
+
+    /**
+     * Gets the single instance of GenericJpaTypedQueryBuilder.
+     *
+     * @param <BEANTYPE>
+     *            the generic type
+     * @return single instance of GenericJpaTypedQueryBuilder
+     */
+    public static <BEANTYPE> GenericJpaTypedQueryBuilder<BEANTYPE> getInstance()
+    {
+        @SuppressWarnings("unchecked")
+        final GenericJpaTypedQueryBuilder<BEANTYPE> result = instance;
+        return result;
     }
 
     /**

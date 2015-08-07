@@ -23,6 +23,13 @@ public interface QueryDefinition<BEANTYPE> extends Serializable
     public BeanDefinition<BEANTYPE> getBeanDefinition();
 
     /**
+     * Gets the initial batch size.
+     *
+     * @return the initial batch size
+     */
+    public int getInitialBatchSize();
+
+    /**
      * Gets the batch size hint.
      *
      * @return the batch size hint

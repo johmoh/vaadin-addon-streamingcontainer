@@ -12,8 +12,10 @@ import javax.servlet.annotation.WebServlet;
 import org.vaadin.addons.streamingcontainer.GenericBeanDefinition;
 import org.vaadin.addons.streamingcontainer.GenericQueryDefinition;
 import org.vaadin.addons.streamingcontainer.GenericStreamingContainer;
+import org.vaadin.addons.streamingcontainer.GenericStreamingContainerItemBuilder;
 import org.vaadin.addons.streamingcontainer.QueryDefinition;
 import org.vaadin.addons.streamingcontainer.QueryFactory;
+import org.vaadin.addons.streamingcontainer.StatusBeanPropertyDefinition;
 import org.vaadin.addons.streamingcontainer.StreamingContainer;
 import org.vaadin.addons.streamingcontainer.jpa.GenericJpaQueryFactory;
 
@@ -124,12 +126,14 @@ public class DemoUI extends UI
     {
         final GenericBeanDefinition<Person> beanDefinition = new GenericBeanDefinition<Person>(Person.class)
             .addOrSetPropertyDefinitionsFromType()
-            .setIdPropertyId("id");
+            .setIdPropertyId("id")
+            .addOrSetPropertyDefinition(StatusBeanPropertyDefinition.getInstance());
         beanDefinition.getAsGenericPropertyDefinition("id").setSortable(true);
         // beanDefinition.getAsGenericPropertyDefinition("firstName").setSortable(true);
         beanDefinition.getAsGenericPropertyDefinition("lastName").setSortable(true);
         beanDefinition.getAsGenericPropertyDefinition("age").setSortable(true);
         final QueryDefinition<Person> queryDefinition = new GenericQueryDefinition<Person>(beanDefinition)
+            .setInitialBatchSizeHint(200)
             .setBatchSizeHint(100)
             .setMaxQuerySizeHint(200000)
             .setSortProperties(new String[] { "id" }, new boolean[] { false })
@@ -139,7 +143,11 @@ public class DemoUI extends UI
             );
         final EntityManager entityManager = initializeDB();
         final QueryFactory<Person> queryFactory = new GenericJpaQueryFactory<Person>(entityManager);
-        final StreamingContainer<?> container = new GenericStreamingContainer<Person>(queryFactory, queryDefinition);
+        final StreamingContainer<?> container = new GenericStreamingContainer<Person>( //
+                queryFactory, //
+                queryDefinition, //
+                GenericStreamingContainerItemBuilder.<Person> getInstance() //
+        );
         final Grid grid = new Grid(container);
         grid.setColumnReorderingAllowed(true);
         grid.setColumnOrder("id", "firstName", "lastName", "age");
