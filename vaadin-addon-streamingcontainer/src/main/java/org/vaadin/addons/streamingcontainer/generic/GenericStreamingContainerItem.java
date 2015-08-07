@@ -1,4 +1,10 @@
-package org.vaadin.addons.streamingcontainer;
+package org.vaadin.addons.streamingcontainer.generic;
+
+import org.vaadin.addons.streamingcontainer.BeanDefinition;
+import org.vaadin.addons.streamingcontainer.Constants;
+import org.vaadin.addons.streamingcontainer.EStatus;
+import org.vaadin.addons.streamingcontainer.StatusProperty;
+import org.vaadin.addons.streamingcontainer.StreamingContainerItem;
 
 import com.vaadin.data.util.BeanItem;
 

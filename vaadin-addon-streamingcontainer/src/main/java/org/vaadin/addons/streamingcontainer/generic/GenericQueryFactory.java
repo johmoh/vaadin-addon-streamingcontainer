@@ -1,9 +1,14 @@
 /**
  *
  */
-package org.vaadin.addons.streamingcontainer;
+package org.vaadin.addons.streamingcontainer.generic;
 
 import java.lang.reflect.Constructor;
+
+import org.vaadin.addons.streamingcontainer.AbstractQuery;
+import org.vaadin.addons.streamingcontainer.AbstractQueryFactory;
+import org.vaadin.addons.streamingcontainer.Query;
+import org.vaadin.addons.streamingcontainer.QueryDefinition;
 
 import com.vaadin.data.Container.Filter;
 

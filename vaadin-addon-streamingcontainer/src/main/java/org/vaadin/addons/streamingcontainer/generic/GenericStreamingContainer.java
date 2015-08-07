@@ -1,14 +1,24 @@
 /**
  *
  */
-package org.vaadin.addons.streamingcontainer;
+package org.vaadin.addons.streamingcontainer.generic;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+import org.vaadin.addons.streamingcontainer.AbstractStreamingContainer;
+import org.vaadin.addons.streamingcontainer.BeanDefinition;
+import org.vaadin.addons.streamingcontainer.Constants;
 import org.vaadin.addons.streamingcontainer.Constants.Limits;
+import org.vaadin.addons.streamingcontainer.EStatus;
+import org.vaadin.addons.streamingcontainer.Query;
+import org.vaadin.addons.streamingcontainer.QueryDefinition;
+import org.vaadin.addons.streamingcontainer.QueryFactory;
+import org.vaadin.addons.streamingcontainer.QueryResult;
+import org.vaadin.addons.streamingcontainer.StreamingContainerItem;
+import org.vaadin.addons.streamingcontainer.StreamingContainerItemBuilder;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;

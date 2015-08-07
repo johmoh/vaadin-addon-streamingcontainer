@@ -1,4 +1,4 @@
-package org.vaadin.addons.streamingcontainer;
+package org.vaadin.addons.streamingcontainer.generic;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
@@ -9,6 +9,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import org.vaadin.addons.streamingcontainer.BeanDefinition;
+import org.vaadin.addons.streamingcontainer.BeanPropertyDefinition;
 
 import com.vaadin.data.util.BeanUtil;
 

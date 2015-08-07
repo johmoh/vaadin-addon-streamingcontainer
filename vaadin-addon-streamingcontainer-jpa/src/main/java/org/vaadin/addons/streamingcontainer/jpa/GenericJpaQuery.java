@@ -7,9 +7,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import org.vaadin.addons.streamingcontainer.BeanDefinition;
-import org.vaadin.addons.streamingcontainer.GenericQueryResult;
 import org.vaadin.addons.streamingcontainer.QueryDefinition;
 import org.vaadin.addons.streamingcontainer.QueryResult;
+import org.vaadin.addons.streamingcontainer.generic.GenericQueryResult;
 
 import com.vaadin.data.Container.Filter;
 

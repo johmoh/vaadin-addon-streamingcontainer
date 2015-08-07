@@ -1,6 +1,8 @@
-package org.vaadin.addons.streamingcontainer;
+package org.vaadin.addons.streamingcontainer.generic;
 
 import java.util.Collection;
+
+import org.vaadin.addons.streamingcontainer.QueryResult;
 
 // TODO: Auto-generated Javadoc
 /**

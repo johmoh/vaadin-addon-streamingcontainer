@@ -1,6 +1,8 @@
-package org.vaadin.addons.streamingcontainer;
+package org.vaadin.addons.streamingcontainer.generic;
 
 import java.io.Serializable;
+
+import org.vaadin.addons.streamingcontainer.BeanPropertyDefinition;
 
 // TODO: Auto-generated Javadoc
 /**

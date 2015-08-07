@@ -9,14 +9,14 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.servlet.annotation.WebServlet;
 
-import org.vaadin.addons.streamingcontainer.GenericBeanDefinition;
-import org.vaadin.addons.streamingcontainer.GenericQueryDefinition;
-import org.vaadin.addons.streamingcontainer.GenericStreamingContainer;
-import org.vaadin.addons.streamingcontainer.GenericStreamingContainerItemBuilder;
 import org.vaadin.addons.streamingcontainer.QueryDefinition;
 import org.vaadin.addons.streamingcontainer.QueryFactory;
 import org.vaadin.addons.streamingcontainer.StatusBeanPropertyDefinition;
 import org.vaadin.addons.streamingcontainer.StreamingContainer;
+import org.vaadin.addons.streamingcontainer.generic.GenericBeanDefinition;
+import org.vaadin.addons.streamingcontainer.generic.GenericQueryDefinition;
+import org.vaadin.addons.streamingcontainer.generic.GenericStreamingContainer;
+import org.vaadin.addons.streamingcontainer.generic.GenericStreamingContainerItemBuilder;
 import org.vaadin.addons.streamingcontainer.jpa.GenericJpaQueryFactory;
 
 import com.vaadin.annotations.Theme;

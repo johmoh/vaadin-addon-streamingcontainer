@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.vaadin.addons.streamingcontainer;
+package org.vaadin.addons.streamingcontainer.generic;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,7 +9,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.vaadin.addons.streamingcontainer.BeanDefinition;
+import org.vaadin.addons.streamingcontainer.Constants;
 import org.vaadin.addons.streamingcontainer.Constants.Defaults;
+import org.vaadin.addons.streamingcontainer.QueryDefinition;
 
 import com.vaadin.data.Container.Filter;
 

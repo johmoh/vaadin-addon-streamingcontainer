@@ -1,7 +1,9 @@
-package org.vaadin.addons.streamingcontainer;
+package org.vaadin.addons.streamingcontainer.generic;
 
 import java.util.LinkedList;
 
+import org.vaadin.addons.streamingcontainer.EStatus;
+import org.vaadin.addons.streamingcontainer.StatusProperty;
 import org.vaadin.addons.streamingcontainer.events.ValueChangeEventImpl;
 
 import com.vaadin.data.Property;

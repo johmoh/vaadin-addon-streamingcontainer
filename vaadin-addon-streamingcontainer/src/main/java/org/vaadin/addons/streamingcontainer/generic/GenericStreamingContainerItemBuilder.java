@@ -1,4 +1,8 @@
-package org.vaadin.addons.streamingcontainer;
+package org.vaadin.addons.streamingcontainer.generic;
+
+import org.vaadin.addons.streamingcontainer.BeanDefinition;
+import org.vaadin.addons.streamingcontainer.StreamingContainerItem;
+import org.vaadin.addons.streamingcontainer.StreamingContainerItemBuilder;
 
 // TODO: Auto-generated Javadoc
 /**
