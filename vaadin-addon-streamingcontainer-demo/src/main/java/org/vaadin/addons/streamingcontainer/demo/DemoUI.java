@@ -17,7 +17,7 @@ import org.vaadin.addons.streamingcontainer.generic.GenericBeanDefinition;
 import org.vaadin.addons.streamingcontainer.generic.GenericQueryDefinition;
 import org.vaadin.addons.streamingcontainer.generic.GenericStreamingContainer;
 import org.vaadin.addons.streamingcontainer.generic.GenericStreamingContainerItemBuilder;
-import org.vaadin.addons.streamingcontainer.jpa.GenericJpaQueryFactory;
+import org.vaadin.addons.streamingcontainer.jpa.generic.GenericJpaQueryFactory;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;

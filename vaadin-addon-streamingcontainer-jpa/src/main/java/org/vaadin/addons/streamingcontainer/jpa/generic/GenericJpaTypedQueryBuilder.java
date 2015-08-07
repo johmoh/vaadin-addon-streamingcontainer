@@ -1,4 +1,4 @@
-package org.vaadin.addons.streamingcontainer.jpa;
+package org.vaadin.addons.streamingcontainer.jpa.generic;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,6 +13,8 @@ import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+
+import org.vaadin.addons.streamingcontainer.jpa.JpaTypedQueryBuilder;
 
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.util.filter.AbstractJunctionFilter;

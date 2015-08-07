@@ -1,4 +1,4 @@
-package org.vaadin.addons.streamingcontainer.jpa;
+package org.vaadin.addons.streamingcontainer.jpa.generic;
 
 import java.util.Collection;
 import java.util.List;
@@ -10,6 +10,8 @@ import org.vaadin.addons.streamingcontainer.BeanDefinition;
 import org.vaadin.addons.streamingcontainer.QueryDefinition;
 import org.vaadin.addons.streamingcontainer.QueryResult;
 import org.vaadin.addons.streamingcontainer.generic.GenericQueryResult;
+import org.vaadin.addons.streamingcontainer.jpa.AbstractJpaQuery;
+import org.vaadin.addons.streamingcontainer.jpa.JpaTypedQueryBuilder;
 
 import com.vaadin.data.Container.Filter;
 

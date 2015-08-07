@@ -1,4 +1,4 @@
-package org.vaadin.addons.streamingcontainer.jpa;
+package org.vaadin.addons.streamingcontainer.jpa.generic;
 
 import java.lang.reflect.Constructor;
 
@@ -7,6 +7,8 @@ import javax.persistence.EntityManager;
 import org.vaadin.addons.streamingcontainer.AbstractQueryFactory;
 import org.vaadin.addons.streamingcontainer.Query;
 import org.vaadin.addons.streamingcontainer.QueryDefinition;
+import org.vaadin.addons.streamingcontainer.jpa.AbstractJpaQuery;
+import org.vaadin.addons.streamingcontainer.jpa.JpaTypedQueryBuilder;
 
 import com.vaadin.data.Container.Filter;
 
