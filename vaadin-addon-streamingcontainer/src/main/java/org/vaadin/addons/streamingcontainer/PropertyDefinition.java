@@ -2,9 +2,9 @@ package org.vaadin.addons.streamingcontainer;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Interface BeanPropertyDefinition.
+ * The Interface PropertyDefinition.
  */
-public interface BeanPropertyDefinition
+public interface PropertyDefinition
 {
     /**
      * Gets the id.

@@ -26,17 +26,20 @@ public abstract class AbstractStreamingContainer<BEANTYPE> implements StreamingC
     /** The Constant serialVersionUID. */
     private static final long serialVersionUID = -2374091247518141937L;
 
+    /** The disposed. */
+    private boolean disposed = false;
+
     /** The query factory. */
-    private final QueryFactory<BEANTYPE> queryFactory;
+    private QueryFactory<BEANTYPE> queryFactory;
 
     /** The query definition. */
     private QueryDefinition<BEANTYPE> queryDefinition = null;
 
     /** The item set change listeners. */
-    private final Collection<ItemSetChangeListener> itemSetChangeListeners = new ArrayList<ItemSetChangeListener>();
+    private Collection<ItemSetChangeListener> itemSetChangeListeners = null;
 
     /** The property set change listeners. */
-    private final Collection<PropertySetChangeListener> propertySetChangeListeners = new ArrayList<PropertySetChangeListener>();
+    private Collection<PropertySetChangeListener> propertySetChangeListeners = null;
 
     /*************************************************************************
      * CONSTRUCTOR
@@ -57,6 +60,57 @@ public abstract class AbstractStreamingContainer<BEANTYPE> implements StreamingC
 
         this.queryFactory = _queryFactory;
         this.queryDefinition = _queryDefinition;
+    }
+
+    /*************************************************************************
+     * DISPOSABLE
+     *************************************************************************/
+
+    /**
+     * @see java.lang.Object#finalize()
+     */
+    @Override
+    protected void finalize()
+        throws Throwable
+    {
+        try {
+            dispose();
+        }
+        catch (final Throwable _t) {
+        }
+        finally {
+            super.finalize();
+        }
+    }
+
+    /**
+     * @see org.vaadin.addons.streamingcontainer.Disposable#dispose()
+     */
+    @Override
+    public final void dispose()
+    {
+        boolean disposed = this.disposed;
+        if (!disposed) {
+            synchronized (this) {
+                disposed = this.disposed;
+                this.disposed = true;
+            }
+
+            if (!disposed) {
+                doDispose();
+            }
+        }
+    }
+
+    /**
+     * Do dispose.
+     */
+    protected void doDispose()
+    {
+        queryFactory = null;
+        queryDefinition = null;
+        itemSetChangeListeners = null;
+        propertySetChangeListeners = null;
     }
 
     /*************************************************************************
@@ -312,6 +366,9 @@ public abstract class AbstractStreamingContainer<BEANTYPE> implements StreamingC
             throw new NullPointerException("_listener is NULL");
         }
 
+        if (null == itemSetChangeListeners) {
+            itemSetChangeListeners = new ArrayList<ItemSetChangeListener>();
+        }
         itemSetChangeListeners.add(_listener);
     }
 
@@ -325,7 +382,12 @@ public abstract class AbstractStreamingContainer<BEANTYPE> implements StreamingC
             throw new NullPointerException("_listener is NULL");
         }
 
-        itemSetChangeListeners.remove(_listener);
+        if (null != itemSetChangeListeners) {
+            itemSetChangeListeners.remove(_listener);
+            if (itemSetChangeListeners.isEmpty()) {
+                itemSetChangeListeners = null;
+            }
+        }
     }
 
     /**
@@ -361,11 +423,9 @@ public abstract class AbstractStreamingContainer<BEANTYPE> implements StreamingC
      */
     protected void fireItemSetChanged()
     {
-        if (!itemSetChangeListeners.isEmpty()) {
+        if ((null != itemSetChangeListeners) && !itemSetChangeListeners.isEmpty()) {
             final ItemSetChangeEvent event = new ItemSetChangeEventImpl(this);
-            for (final ItemSetChangeListener listener : itemSetChangeListeners) {
-                listener.containerItemSetChange(event);
-            }
+            fireItemSetChanged(event);
         }
     }
 
@@ -379,12 +439,25 @@ public abstract class AbstractStreamingContainer<BEANTYPE> implements StreamingC
      */
     protected void fireItemAddEvent(final int _startIndex, final int _numOfAddedItems)
     {
-        if (!itemSetChangeListeners.isEmpty() && (_numOfAddedItems > 0)) {
+        if ((null != itemSetChangeListeners) && !itemSetChangeListeners.isEmpty() && (_numOfAddedItems > 0)) {
             final Object startItemId = getIdByIndex(_startIndex);
             final Container.Indexed.ItemAddEvent event = new ItemAddEventImpl(this, _startIndex, startItemId,
                     _numOfAddedItems);
+            fireItemSetChanged(event);
+        }
+    }
+
+    /**
+     * Fire item set changed.
+     *
+     * @param _event
+     *            the _event
+     */
+    protected void fireItemSetChanged(final ItemSetChangeEvent _event)
+    {
+        if ((null != itemSetChangeListeners) && !itemSetChangeListeners.isEmpty() && (null != _event)) {
             for (final ItemSetChangeListener listener : itemSetChangeListeners) {
-                listener.containerItemSetChange(event);
+                listener.containerItemSetChange(_event);
             }
         }
     }
@@ -424,7 +497,7 @@ public abstract class AbstractStreamingContainer<BEANTYPE> implements StreamingC
     {
         final QueryDefinition<BEANTYPE> queryDefinition = getQueryDefinition();
         final BeanDefinition<BEANTYPE> beanDefinition = queryDefinition.getBeanDefinition();
-        final BeanPropertyDefinition propertyDefinition = beanDefinition.getPropertyDefinition(_propertyId);
+        final PropertyDefinition propertyDefinition = beanDefinition.getPropertyDefinition(_propertyId);
         final Class<?> result = propertyDefinition.getType();
         return result;
     }
@@ -456,6 +529,22 @@ public abstract class AbstractStreamingContainer<BEANTYPE> implements StreamingC
     }
 
     /*************************************************************************
+     * SORT ORDER CONFIGURATION
+     *************************************************************************/
+
+    /**
+     * @see com.vaadin.data.Container.Sortable#getSortableContainerPropertyIds()
+     */
+    @Override
+    public Collection<?> getSortableContainerPropertyIds()
+    {
+        final QueryDefinition<BEANTYPE> queryDefinition = getQueryDefinition();
+        final BeanDefinition<BEANTYPE> beanDefinition = queryDefinition.getBeanDefinition();
+        final Collection<Object> result = beanDefinition.getPropertyIds(null, Boolean.TRUE);
+        return result;
+    }
+
+    /*************************************************************************
      * PROPERTY SET CHANGED
      *************************************************************************/
 
@@ -469,6 +558,9 @@ public abstract class AbstractStreamingContainer<BEANTYPE> implements StreamingC
             throw new NullPointerException("_listener is NULL");
         }
 
+        if (null == propertySetChangeListeners) {
+            propertySetChangeListeners = new ArrayList<PropertySetChangeListener>();
+        }
         propertySetChangeListeners.add(_listener);
     }
 
@@ -482,7 +574,12 @@ public abstract class AbstractStreamingContainer<BEANTYPE> implements StreamingC
             throw new NullPointerException("_listener is NULL");
         }
 
-        propertySetChangeListeners.remove(_listener);
+        if (null != propertySetChangeListeners) {
+            propertySetChangeListeners.remove(_listener);
+            if (propertySetChangeListeners.isEmpty()) {
+                propertySetChangeListeners = null;
+            }
+        }
     }
 
     /**
@@ -518,7 +615,7 @@ public abstract class AbstractStreamingContainer<BEANTYPE> implements StreamingC
      */
     protected void firePropertySetChanged()
     {
-        if (!propertySetChangeListeners.isEmpty()) {
+        if ((null != propertySetChangeListeners) && !propertySetChangeListeners.isEmpty()) {
             final PropertySetChangeEvent event = new PropertySetChangeEventImpl(this);
             for (final PropertySetChangeListener listener : propertySetChangeListeners) {
                 listener.containerPropertySetChange(event);

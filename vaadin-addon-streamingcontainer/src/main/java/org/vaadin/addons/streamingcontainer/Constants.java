@@ -75,7 +75,7 @@ public final class Constants
     }
 
     /** The Constant STATUS_PROPERTY_ID. */
-    public static final String STATUS_PROPERTY_ID = "$_STATUS_$";
+    public static final String STATUS_PROPERTY_ID = "$_STATUS";
 
     /** The Constant STATUS_PROPERTY_TYPE. */
     public static final Class<?> STATUS_PROPERTY_TYPE = EStatus.class;

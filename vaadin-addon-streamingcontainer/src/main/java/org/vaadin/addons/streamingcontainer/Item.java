@@ -1,15 +1,13 @@
 package org.vaadin.addons.streamingcontainer;
 
-import com.vaadin.data.Item;
-
 // TODO: Auto-generated Javadoc
 /**
- * The Interface StreamingContainerItem.
+ * The Interface Item.
  *
  * @param <BEANTYPE>
  *            the generic type
  */
-public interface StreamingContainerItem<BEANTYPE> extends Item, Item.PropertySetChangeNotifier, Cloneable
+public interface Item<BEANTYPE> extends com.vaadin.data.Item, com.vaadin.data.Item.PropertySetChangeNotifier
 {
     /**
      * Gets the bean.

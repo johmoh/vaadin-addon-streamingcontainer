@@ -4,20 +4,20 @@ import java.io.Serializable;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class StatusBeanPropertyDefinition.
+ * The Class StatusPropertyDefinition.
  */
-public class StatusBeanPropertyDefinition implements BeanPropertyDefinition, Serializable
+public class StatusPropertyDefinition implements PropertyDefinition, Serializable
 {
     /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 3466535417173743237L;
 
     /** The Constant instance. */
-    private static final StatusBeanPropertyDefinition instance = new StatusBeanPropertyDefinition();
+    private static final StatusPropertyDefinition instance = new StatusPropertyDefinition();
 
     /**
      * Instantiates a new status bean property definition.
      */
-    private StatusBeanPropertyDefinition()
+    private StatusPropertyDefinition()
     {
         // INTENTIONALLY LEFT BLANK
     }
@@ -27,13 +27,13 @@ public class StatusBeanPropertyDefinition implements BeanPropertyDefinition, Ser
      *
      * @return single instance of StatusBeanPropertyDefinition
      */
-    public static StatusBeanPropertyDefinition getInstance()
+    public static StatusPropertyDefinition getInstance()
     {
         return instance;
     }
 
     /**
-     * @see org.vaadin.addons.streamingcontainer.BeanPropertyDefinition#getId()
+     * @see org.vaadin.addons.streamingcontainer.PropertyDefinition#getId()
      */
     @Override
     public Object getId()
@@ -42,7 +42,7 @@ public class StatusBeanPropertyDefinition implements BeanPropertyDefinition, Ser
     }
 
     /**
-     * @see org.vaadin.addons.streamingcontainer.BeanPropertyDefinition#getType()
+     * @see org.vaadin.addons.streamingcontainer.PropertyDefinition#getType()
      */
     @Override
     public Class<?> getType()
@@ -51,7 +51,7 @@ public class StatusBeanPropertyDefinition implements BeanPropertyDefinition, Ser
     }
 
     /**
-     * @see org.vaadin.addons.streamingcontainer.BeanPropertyDefinition#getDefaultValue()
+     * @see org.vaadin.addons.streamingcontainer.PropertyDefinition#getDefaultValue()
      */
     @Override
     public Object getDefaultValue()
@@ -60,7 +60,7 @@ public class StatusBeanPropertyDefinition implements BeanPropertyDefinition, Ser
     }
 
     /**
-     * @see org.vaadin.addons.streamingcontainer.BeanPropertyDefinition#isReadOnly()
+     * @see org.vaadin.addons.streamingcontainer.PropertyDefinition#isReadOnly()
      */
     @Override
     public boolean isReadOnly()
@@ -69,7 +69,7 @@ public class StatusBeanPropertyDefinition implements BeanPropertyDefinition, Ser
     }
 
     /**
-     * @see org.vaadin.addons.streamingcontainer.BeanPropertyDefinition#isSortable()
+     * @see org.vaadin.addons.streamingcontainer.PropertyDefinition#isSortable()
      */
     @Override
     public boolean isSortable()

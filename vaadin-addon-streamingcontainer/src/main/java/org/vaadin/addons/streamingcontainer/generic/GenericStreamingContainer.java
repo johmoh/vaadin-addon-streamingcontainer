@@ -13,14 +13,13 @@ import org.vaadin.addons.streamingcontainer.BeanDefinition;
 import org.vaadin.addons.streamingcontainer.Constants;
 import org.vaadin.addons.streamingcontainer.Constants.Limits;
 import org.vaadin.addons.streamingcontainer.EStatus;
+import org.vaadin.addons.streamingcontainer.Item;
+import org.vaadin.addons.streamingcontainer.ItemBuilder;
 import org.vaadin.addons.streamingcontainer.Query;
 import org.vaadin.addons.streamingcontainer.QueryDefinition;
 import org.vaadin.addons.streamingcontainer.QueryFactory;
 import org.vaadin.addons.streamingcontainer.QueryResult;
-import org.vaadin.addons.streamingcontainer.StreamingContainerItem;
-import org.vaadin.addons.streamingcontainer.StreamingContainerItemBuilder;
 
-import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.filter.UnsupportedFilterException;
 
@@ -37,7 +36,7 @@ public class GenericStreamingContainer<BEANTYPE> extends AbstractStreamingContai
     private static final long serialVersionUID = 8027529229449065312L;
 
     /** The item builder. */
-    private final StreamingContainerItemBuilder<BEANTYPE> itemBuilder;
+    private ItemBuilder<BEANTYPE> itemBuilder;
 
     /** The initialized. */
     private boolean initialized = false;
@@ -61,13 +60,13 @@ public class GenericStreamingContainer<BEANTYPE> extends AbstractStreamingContai
     private boolean[] sortPropertyAscendingStates = null;
 
     /** The index2item list. */
-    private final ArrayList<StreamingContainerItem<BEANTYPE>> index2itemList = new ArrayList<StreamingContainerItem<BEANTYPE>>();
+    private ArrayList<Item<BEANTYPE>> index2itemList = new ArrayList<Item<BEANTYPE>>();
 
     /** The index2item id list. */
-    private final ArrayList<Object> index2itemIdList = new ArrayList<Object>();
+    private ArrayList<Object> index2itemIdList = new ArrayList<Object>();
 
     /** The item id2index map. */
-    private final HashMap<Object, Integer> itemId2indexMap = new HashMap<Object, Integer>();
+    private HashMap<Object, Integer> itemId2indexMap = new HashMap<Object, Integer>();
 
     /*************************************************************************
      * CONSTRUCTOR
@@ -83,7 +82,7 @@ public class GenericStreamingContainer<BEANTYPE> extends AbstractStreamingContai
      */
     public GenericStreamingContainer(final QueryFactory<BEANTYPE> _queryFactory,
                                      final QueryDefinition<BEANTYPE> _queryDefinition,
-                                     final StreamingContainerItemBuilder<BEANTYPE> _itemBuilder)
+                                     final ItemBuilder<BEANTYPE> _itemBuilder)
     {
         super(_queryFactory, _queryDefinition);
 
@@ -94,22 +93,33 @@ public class GenericStreamingContainer<BEANTYPE> extends AbstractStreamingContai
         this.itemBuilder = _itemBuilder;
     }
 
+    /*************************************************************************
+     * DISPOSABLE
+     *************************************************************************/
+
     /**
-     * @see java.lang.Object#finalize()
+     * @see org.vaadin.addons.streamingcontainer.AbstractStreamingContainer#doDispose()
      */
     @Override
-    protected void finalize()
-        throws Throwable
+    protected void doDispose()
     {
-        try {
-            disposeQuery();
-        }
-        catch (final Throwable _t) {
-        }
-        finally {
-            super.finalize();
-        }
+        disposeQuery();
+        itemBuilder = null;
+        initialized = false;
+        endOfStream = true;
+        hasMore = null;
+        loadTillEndOfStreamOnInitialization = false;
+        sortPropertyIds = null;
+        sortPropertyAscendingStates = null;
+        index2itemList = null;
+        index2itemIdList = null;
+        itemId2indexMap = null;
+        super.doDispose();
     }
+
+    /*************************************************************************
+     * ???
+     *************************************************************************/
 
     /**
      * Initialize query.
@@ -155,9 +165,8 @@ public class GenericStreamingContainer<BEANTYPE> extends AbstractStreamingContai
     {
         // System.out.println("CALL LazyStreamingQueryContainer.disposeQuery()");
         endOfStream = true;
-        hasMore = null;
         if (null != query) {
-            query.closeStream();
+            query.dispose();
             query = null;
         }
     }
@@ -185,6 +194,7 @@ public class GenericStreamingContainer<BEANTYPE> extends AbstractStreamingContai
         initialized = false;
 
         disposeQuery();
+        hasMore = null;
         clearCache();
 
         fireItemSetChanged();
@@ -321,7 +331,7 @@ public class GenericStreamingContainer<BEANTYPE> extends AbstractStreamingContai
                 continue;
             }
 
-            final StreamingContainerItem<BEANTYPE> item = itemBuilder.build(object, beanDefinition);
+            final Item<BEANTYPE> item = itemBuilder.build(object, beanDefinition);
             item.setStatus(EStatus.Loaded);
             final Object itemId;
             if (null != idPropertyId) {
@@ -395,10 +405,7 @@ public class GenericStreamingContainer<BEANTYPE> extends AbstractStreamingContai
     @Override
     public void endStreaming()
     {
-        endOfStream = true;
-        if (null != query) {
-            query.closeStream();
-        }
+        disposeQuery();
     }
 
     /**
@@ -500,10 +507,10 @@ public class GenericStreamingContainer<BEANTYPE> extends AbstractStreamingContai
      * @see com.vaadin.data.Container#getItem(java.lang.Object)
      */
     @Override
-    public Item getItem(final Object _itemId)
+    public com.vaadin.data.Item getItem(final Object _itemId)
     {
         final int index = indexOfId(_itemId);
-        final Item result = ((index < 0) ? null : index2itemList.get(index));
+        final com.vaadin.data.Item result = ((index < 0) ? null : index2itemList.get(index));
         return result;
     }
 
@@ -631,17 +638,5 @@ public class GenericStreamingContainer<BEANTYPE> extends AbstractStreamingContai
         if (initialized) {
             refresh();
         }
-    }
-
-    /**
-     * @see com.vaadin.data.Container.Sortable#getSortableContainerPropertyIds()
-     */
-    @Override
-    public Collection<?> getSortableContainerPropertyIds()
-    {
-        final QueryDefinition<BEANTYPE> queryDefinition = getQueryDefinition();
-        final BeanDefinition<BEANTYPE> beanDefinition = queryDefinition.getBeanDefinition();
-        final Collection<Object> result = beanDefinition.getIdsOfSortablePropertyDefinitions();
-        return result;
     }
 }

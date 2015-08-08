@@ -2,12 +2,12 @@ package org.vaadin.addons.streamingcontainer;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Interface StreamingContainerItemBuilder.
+ * The Interface ItemBuilder.
  *
  * @param <BEANTYPE>
  *            the generic type
  */
-public interface StreamingContainerItemBuilder<BEANTYPE>
+public interface ItemBuilder<BEANTYPE>
 {
     /**
      * Builds the.
@@ -18,5 +18,5 @@ public interface StreamingContainerItemBuilder<BEANTYPE>
      *            the _bean definition
      * @return the streaming container item
      */
-    public StreamingContainerItem<BEANTYPE> build(final BEANTYPE _obj, final BeanDefinition<BEANTYPE> _beanDefinition);
+    public Item<BEANTYPE> build(final BEANTYPE _obj, final BeanDefinition<BEANTYPE> _beanDefinition);
 }

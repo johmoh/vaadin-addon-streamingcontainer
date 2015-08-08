@@ -9,14 +9,16 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.servlet.annotation.WebServlet;
 
+import org.vaadin.addons.streamingcontainer.BeanDefinition;
+import org.vaadin.addons.streamingcontainer.ItemBuilder;
 import org.vaadin.addons.streamingcontainer.QueryDefinition;
 import org.vaadin.addons.streamingcontainer.QueryFactory;
-import org.vaadin.addons.streamingcontainer.StatusBeanPropertyDefinition;
+import org.vaadin.addons.streamingcontainer.StatusPropertyDefinition;
 import org.vaadin.addons.streamingcontainer.StreamingContainer;
-import org.vaadin.addons.streamingcontainer.generic.GenericBeanDefinition;
+import org.vaadin.addons.streamingcontainer.generic.GenericItemBuilder;
 import org.vaadin.addons.streamingcontainer.generic.GenericQueryDefinition;
 import org.vaadin.addons.streamingcontainer.generic.GenericStreamingContainer;
-import org.vaadin.addons.streamingcontainer.generic.GenericStreamingContainerItemBuilder;
+import org.vaadin.addons.streamingcontainer.generic.GenericTypeBasedBeanDefinitionBuilder;
 import org.vaadin.addons.streamingcontainer.jpa.generic.GenericJpaQueryFactory;
 
 import com.vaadin.annotations.Theme;
@@ -124,14 +126,12 @@ public class DemoUI extends UI
     @Override
     protected void init(final VaadinRequest request)
     {
-        final GenericBeanDefinition<Person> beanDefinition = new GenericBeanDefinition<Person>(Person.class)
-            .addOrSetPropertyDefinitionsFromType()
-            .setIdPropertyId("id")
-            .addOrSetPropertyDefinition(StatusBeanPropertyDefinition.getInstance());
-        beanDefinition.getAsGenericPropertyDefinition("id").setSortable(true);
-        // beanDefinition.getAsGenericPropertyDefinition("firstName").setSortable(true);
-        beanDefinition.getAsGenericPropertyDefinition("lastName").setSortable(true);
-        beanDefinition.getAsGenericPropertyDefinition("age").setSortable(true);
+        final BeanDefinition<Person> beanDefinition = new GenericTypeBasedBeanDefinitionBuilder<Person>(Person.class)
+            .setPropertyDefinitionSortable("id", true)
+            .setPropertyDefinitionSortable("lastName", true)
+            .setPropertyDefinitionSortable("age", true)
+            .addOrSetPropertyDefinition(StatusPropertyDefinition.getInstance())
+            .build();
         final QueryDefinition<Person> queryDefinition = new GenericQueryDefinition<Person>(beanDefinition)
             .setInitialBatchSizeHint(200)
             .setBatchSizeHint(100)
@@ -143,10 +143,11 @@ public class DemoUI extends UI
             );
         final EntityManager entityManager = initializeDB();
         final QueryFactory<Person> queryFactory = new GenericJpaQueryFactory<Person>(entityManager);
+        final ItemBuilder<Person> itemBuilder = GenericItemBuilder.<Person> getInstance();
         final StreamingContainer<?> container = new GenericStreamingContainer<Person>( //
                 queryFactory, //
                 queryDefinition, //
-                GenericStreamingContainerItemBuilder.<Person> getInstance() //
+                itemBuilder //
         );
         final Grid grid = new Grid(container);
         grid.setColumnReorderingAllowed(true);

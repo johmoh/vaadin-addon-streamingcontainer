@@ -2,13 +2,13 @@ package org.vaadin.addons.streamingcontainer.generic;
 
 import java.io.Serializable;
 
-import org.vaadin.addons.streamingcontainer.BeanPropertyDefinition;
+import org.vaadin.addons.streamingcontainer.PropertyDefinition;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class GenericBeanPropertyDefinition.
+ * The Class GenericPropertyDefinition.
  */
-public final class GenericBeanPropertyDefinition implements BeanPropertyDefinition, Serializable
+public final class GenericPropertyDefinition implements PropertyDefinition, Serializable
 {
     /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 3851395431642174429L;
@@ -36,7 +36,7 @@ public final class GenericBeanPropertyDefinition implements BeanPropertyDefiniti
      * @param _type
      *            the _type
      */
-    public GenericBeanPropertyDefinition(final Object _id, final Class<?> _type)
+    public GenericPropertyDefinition(final Object _id, final Class<?> _type)
     {
         this(_id, _type, null, true, false);
     }
@@ -55,11 +55,11 @@ public final class GenericBeanPropertyDefinition implements BeanPropertyDefiniti
      * @param _sortable
      *            the _sortable
      */
-    public GenericBeanPropertyDefinition(final Object _id,
-                                         final Class<?> _type,
-                                         final Object _defaultValue,
-                                         final boolean _readOnly,
-                                         final boolean _sortable)
+    public GenericPropertyDefinition(final Object _id,
+                                     final Class<?> _type,
+                                     final Object _defaultValue,
+                                     final boolean _readOnly,
+                                     final boolean _sortable)
     {
         this.id = _id;
         this.type = _type;
@@ -74,14 +74,19 @@ public final class GenericBeanPropertyDefinition implements BeanPropertyDefiniti
      * @param _prototype
      *            the _prototype
      */
-    public GenericBeanPropertyDefinition(final BeanPropertyDefinition _prototype)
+    public GenericPropertyDefinition(final PropertyDefinition _prototype)
     {
-        this(_prototype.getId(), _prototype.getType(), _prototype.getDefaultValue(), _prototype.isReadOnly(),
-                _prototype.isSortable());
+        this( //
+                _prototype.getId(), //
+                _prototype.getType(), //
+                _prototype.getDefaultValue(), //
+                _prototype.isReadOnly(), //
+                _prototype.isSortable() //
+        );
     }
 
     /**
-     * @see org.vaadin.addons.streamingcontainer.BeanPropertyDefinition#getId()
+     * @see org.vaadin.addons.streamingcontainer.PropertyDefinition#getId()
      */
     @Override
     public Object getId()
@@ -90,7 +95,7 @@ public final class GenericBeanPropertyDefinition implements BeanPropertyDefiniti
     }
 
     /**
-     * @see org.vaadin.addons.streamingcontainer.BeanPropertyDefinition#getType()
+     * @see org.vaadin.addons.streamingcontainer.PropertyDefinition#getType()
      */
     @Override
     public Class<?> getType()
@@ -105,14 +110,14 @@ public final class GenericBeanPropertyDefinition implements BeanPropertyDefiniti
      *            the type
      * @return the generic bean property definition
      */
-    public GenericBeanPropertyDefinition setType(final Class<?> type)
+    public GenericPropertyDefinition setType(final Class<?> type)
     {
         this.type = type;
         return this;
     }
 
     /**
-     * @see org.vaadin.addons.streamingcontainer.BeanPropertyDefinition#getDefaultValue()
+     * @see org.vaadin.addons.streamingcontainer.PropertyDefinition#getDefaultValue()
      */
     @Override
     public Object getDefaultValue()
@@ -127,14 +132,14 @@ public final class GenericBeanPropertyDefinition implements BeanPropertyDefiniti
      *            the default value
      * @return the generic bean property definition
      */
-    public GenericBeanPropertyDefinition setDefaultValue(final Object defaultValue)
+    public GenericPropertyDefinition setDefaultValue(final Object defaultValue)
     {
         this.defaultValue = defaultValue;
         return this;
     }
 
     /**
-     * @see org.vaadin.addons.streamingcontainer.BeanPropertyDefinition#isReadOnly()
+     * @see org.vaadin.addons.streamingcontainer.PropertyDefinition#isReadOnly()
      */
     @Override
     public boolean isReadOnly()
@@ -149,14 +154,14 @@ public final class GenericBeanPropertyDefinition implements BeanPropertyDefiniti
      *            the read only
      * @return the generic bean property definition
      */
-    public GenericBeanPropertyDefinition setReadOnly(final boolean readOnly)
+    public GenericPropertyDefinition setReadOnly(final boolean readOnly)
     {
         this.readOnly = readOnly;
         return this;
     }
 
     /**
-     * @see org.vaadin.addons.streamingcontainer.BeanPropertyDefinition#isSortable()
+     * @see org.vaadin.addons.streamingcontainer.PropertyDefinition#isSortable()
      */
     @Override
     public boolean isSortable()
@@ -171,7 +176,7 @@ public final class GenericBeanPropertyDefinition implements BeanPropertyDefiniti
      *            the sortable
      * @return the generic bean property definition
      */
-    public GenericBeanPropertyDefinition setSortable(final boolean sortable)
+    public GenericPropertyDefinition setSortable(final boolean sortable)
     {
         this.sortable = sortable;
         return this;

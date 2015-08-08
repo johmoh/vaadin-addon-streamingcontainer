@@ -17,10 +17,10 @@ import com.vaadin.data.Container.Filter;
 public abstract class AbstractJpaQuery<BEANTYPE> extends AbstractQuery<BEANTYPE>
 {
     /** The entity manager. */
-    private final EntityManager entityManager;
+    private EntityManager entityManager;
 
     /** The jpa typed query builder. */
-    private final JpaTypedQueryBuilder<BEANTYPE> jpaTypedQueryBuilder;
+    private JpaTypedQueryBuilder<BEANTYPE> jpaTypedQueryBuilder;
 
     /**
      * Instantiates a new abstract jpa query.
@@ -56,6 +56,17 @@ public abstract class AbstractJpaQuery<BEANTYPE> extends AbstractQuery<BEANTYPE>
 
         this.entityManager = _entityManager;
         this.jpaTypedQueryBuilder = _jpaTypedQueryBuilder;
+    }
+
+    /**
+     * @see org.vaadin.addons.streamingcontainer.AbstractQuery#doDispose()
+     */
+    @Override
+    protected void doDispose()
+    {
+        entityManager = null;
+        jpaTypedQueryBuilder = null;
+        super.doDispose();
     }
 
     /**

@@ -24,11 +24,8 @@ import com.vaadin.data.Container.Filter;
  */
 public class GenericJpaQuery<BEANTYPE> extends AbstractJpaQuery<BEANTYPE>
 {
-    /** The stream closed. */
-    private Boolean streamClosed = null;
-
     /** The last has more. */
-    private boolean lastHasMore = false;
+    private boolean lastHasMore = true;
 
     /** The next first row num. */
     private int nextFirstRowNumber = 0;
@@ -67,21 +64,32 @@ public class GenericJpaQuery<BEANTYPE> extends AbstractJpaQuery<BEANTYPE>
     }
 
     /**
+     * @see org.vaadin.addons.streamingcontainer.jpa.AbstractJpaQuery#doDispose()
+     */
+    @Override
+    protected void doDispose()
+    {
+        System.out.println("CALL [" + this.hashCode() + "] GenericJpaQuery.doDispose()");
+        lastHasMore = false;
+        nextFirstRowNumber = -1;
+    }
+
+    /**
      * @see org.vaadin.addons.streamingcontainer.Query#readNext(int)
      */
     @Override
     public QueryResult<BEANTYPE> readNext(final int _maxNumberOfObjects)
     {
-        System.out.println("CALL [" + this.hashCode() + "] JpaQuery.readNext(" + _maxNumberOfObjects + ")");
+        System.out.println("CALL [" + this.hashCode() + "] GenericJpaQuery.readNext(" + _maxNumberOfObjects + ")");
         final List<BEANTYPE> personList;
         final boolean hasMore;
         if (_maxNumberOfObjects <= 0) {
             personList = null;
             hasMore = lastHasMore;
         }
-        else if (Boolean.TRUE.equals(streamClosed)) {
+        else if (!lastHasMore) {
             personList = null;
-            hasMore = lastHasMore;
+            hasMore = false;
         }
         else {
             final QueryDefinition<BEANTYPE> queryDefinition = getQueryDefinition();
@@ -122,34 +130,21 @@ public class GenericJpaQuery<BEANTYPE> extends AbstractJpaQuery<BEANTYPE>
             if (queryResultSize <= _maxNumberOfObjects) {
                 personList = queryResult;
                 hasMore = false;
-                closeStream();
+                lastHasMore = hasMore;
+                dispose();
             }
             else {
                 personList = queryResult.subList(0, _maxNumberOfObjects);
                 hasMore = true;
+                lastHasMore = hasMore;
                 nextFirstRowNumber += _maxNumberOfObjects;
             }
-
-            lastHasMore = hasMore;
         }
 
-        System.out.println("NOTE [" + this.hashCode() + "] JpaQuery.readNext(...): hasMore=" + hasMore
+        System.out.println("NOTE [" + this.hashCode() + "] GenericJpaQuery.readNext(...): hasMore=" + hasMore
                 + " nextFirstRowNumber=" + nextFirstRowNumber);
 
         final QueryResult<BEANTYPE> result = new GenericQueryResult<BEANTYPE>(personList, hasMore);
         return result;
-    }
-
-    /**
-     * @see org.vaadin.addons.streamingcontainer.Query#closeStream()
-     */
-    @Override
-    public void closeStream()
-    {
-        System.out.println("CALL [" + this.hashCode() + "] JpaQuery.closeStream()");
-        if (!Boolean.TRUE.equals(streamClosed)) {
-            nextFirstRowNumber = -1;
-            streamClosed = Boolean.TRUE;
-        }
     }
 }

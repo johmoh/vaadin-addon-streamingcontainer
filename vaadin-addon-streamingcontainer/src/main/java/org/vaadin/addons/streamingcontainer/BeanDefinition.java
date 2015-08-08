@@ -46,11 +46,15 @@ public interface BeanDefinition<BEANTYPE>
     public Set<Object> getPropertyIds();
 
     /**
-     * Gets the ids of sortable property definitions.
+     * Gets the property ids.
      *
-     * @return the ids of sortable property definitions
+     * @param _readOnly
+     *            the _read only
+     * @param _sortable
+     *            the _sortable
+     * @return the property ids
      */
-    public Set<Object> getIdsOfSortablePropertyDefinitions();
+    public Set<Object> getPropertyIds(final Boolean _readOnly, final Boolean _sortable);
 
     /**
      * Gets the property definition.
@@ -59,5 +63,5 @@ public interface BeanDefinition<BEANTYPE>
      *            the id
      * @return the definition
      */
-    public BeanPropertyDefinition getPropertyDefinition(final Object _id);
+    public PropertyDefinition getPropertyDefinition(final Object _id);
 }

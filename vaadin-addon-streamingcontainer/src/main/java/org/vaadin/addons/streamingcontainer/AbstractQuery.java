@@ -14,29 +14,32 @@ import com.vaadin.data.Container.Filter;
  */
 public abstract class AbstractQuery<BEANTYPE> implements Query<BEANTYPE>
 {
+    /** The disposed. */
+    private boolean disposed = false;
+
     /** The query definition. */
-    private final QueryDefinition<BEANTYPE> queryDefinition;
+    private QueryDefinition<BEANTYPE> queryDefinition;
 
     /**
      * The additional filter.<br>
      * <br>
      * <b>ATTENTION!<b> It is not allowed to modify the content of this array!
      */
-    private final Filter[] additionalFilters;
+    private Filter[] additionalFilters;
 
     /**
      * The sort property ids.<br>
      * <br>
      * <b>ATTENTION!<b> It is not allowed to modify the content of this array!
      */
-    private final Object[] sortPropertyIds;
+    private Object[] sortPropertyIds;
 
     /**
      * The sort property ascending states.<br>
      * <br>
      * <b>ATTENTION!<b> It is not allowed to modify the content of this array!
      */
-    private final boolean[] sortPropertyAscendingStates;
+    private boolean[] sortPropertyAscendingStates;
 
     /**
      * Instantiates a new abstract query.
@@ -90,13 +93,43 @@ public abstract class AbstractQuery<BEANTYPE> implements Query<BEANTYPE>
         throws Throwable
     {
         try {
-            closeStream();
+            dispose();
         }
         catch (final Throwable _t) {
         }
         finally {
             super.finalize();
         }
+    }
+
+    /**
+     * @see org.vaadin.addons.streamingcontainer.Disposable#dispose()
+     */
+    @Override
+    public final void dispose()
+    {
+        boolean disposed = this.disposed;
+        if (!disposed) {
+            synchronized (this) {
+                disposed = this.disposed;
+                this.disposed = true;
+            }
+
+            if (!disposed) {
+                doDispose();
+            }
+        }
+    }
+
+    /**
+     * Do dispose.
+     */
+    protected void doDispose()
+    {
+        queryDefinition = null;
+        additionalFilters = null;
+        sortPropertyIds = null;
+        sortPropertyAscendingStates = null;
     }
 
     /**

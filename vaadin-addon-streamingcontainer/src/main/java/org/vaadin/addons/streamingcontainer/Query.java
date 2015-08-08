@@ -5,12 +5,12 @@ package org.vaadin.addons.streamingcontainer;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Interface IQuery.
+ * The Interface Query.
  *
  * @param <BEANTYPE>
  *            the generic type
  */
-public interface Query<BEANTYPE>
+public interface Query<BEANTYPE> extends Disposable
 {
     /**
      * Read next.
@@ -20,9 +20,4 @@ public interface Query<BEANTYPE>
      * @return the query result
      */
     public QueryResult<BEANTYPE> readNext(final int _maxNumberOfObjects);
-
-    /**
-     * Close stream.
-     */
-    public void closeStream();
 }

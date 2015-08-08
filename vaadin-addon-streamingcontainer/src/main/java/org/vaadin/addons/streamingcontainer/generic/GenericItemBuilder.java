@@ -1,26 +1,26 @@
 package org.vaadin.addons.streamingcontainer.generic;
 
 import org.vaadin.addons.streamingcontainer.BeanDefinition;
-import org.vaadin.addons.streamingcontainer.StreamingContainerItem;
-import org.vaadin.addons.streamingcontainer.StreamingContainerItemBuilder;
+import org.vaadin.addons.streamingcontainer.Item;
+import org.vaadin.addons.streamingcontainer.ItemBuilder;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class GenericStreamingContainerItemBuilder.
+ * The Class GenericItemBuilder.
  *
  * @param <BEANTYPE>
  *            the generic type
  */
-public class GenericStreamingContainerItemBuilder<BEANTYPE> implements StreamingContainerItemBuilder<BEANTYPE>
+public class GenericItemBuilder<BEANTYPE> implements ItemBuilder<BEANTYPE>
 {
     /** The Constant instance. */
     @SuppressWarnings("rawtypes")
-    private static final GenericStreamingContainerItemBuilder instance = new GenericStreamingContainerItemBuilder();
+    private static final GenericItemBuilder instance = new GenericItemBuilder();
 
     /**
      * Instantiates a new generic streaming container item builder.
      */
-    private GenericStreamingContainerItemBuilder()
+    private GenericItemBuilder()
     {
         // INTENTIONALLY LEFT BLANK
     }
@@ -32,19 +32,19 @@ public class GenericStreamingContainerItemBuilder<BEANTYPE> implements Streaming
      *            the generic type
      * @return single instance of BeanItemBuilder
      */
-    public static <BEANTYPE> GenericStreamingContainerItemBuilder<BEANTYPE> getInstance()
+    public static <BEANTYPE> GenericItemBuilder<BEANTYPE> getInstance()
     {
         @SuppressWarnings("unchecked")
-        final GenericStreamingContainerItemBuilder<BEANTYPE> result = instance;
+        final GenericItemBuilder<BEANTYPE> result = instance;
         return result;
     }
 
     /**
-     * @see org.vaadin.addons.streamingcontainer.StreamingContainerItemBuilder#build(java.lang.Object,
+     * @see org.vaadin.addons.streamingcontainer.ItemBuilder#build(java.lang.Object,
      *      org.vaadin.addons.streamingcontainer.BeanDefinition)
      */
     @Override
-    public StreamingContainerItem<BEANTYPE> build(final BEANTYPE _obj, final BeanDefinition<BEANTYPE> _beanDefinition)
+    public Item<BEANTYPE> build(final BEANTYPE _obj, final BeanDefinition<BEANTYPE> _beanDefinition)
     {
         if (null == _obj) {
             throw new NullPointerException("_obj is NULL");
@@ -53,7 +53,7 @@ public class GenericStreamingContainerItemBuilder<BEANTYPE> implements Streaming
             throw new NullPointerException("_beanDefinition is NULL");
         }
 
-        final StreamingContainerItem<BEANTYPE> result = new GenericStreamingContainerItem<BEANTYPE>( //
+        final Item<BEANTYPE> result = new GenericItem<BEANTYPE>( //
                 _obj, //
                 _beanDefinition //
         );

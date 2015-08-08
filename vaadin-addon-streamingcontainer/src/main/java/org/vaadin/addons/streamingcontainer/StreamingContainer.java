@@ -13,6 +13,7 @@ import com.vaadin.data.Container;
  */
 public interface StreamingContainer<BEANTYPE>
     extends
+        Disposable,
         Container.Indexed,
         Container.Sortable,
         Container.Filterable,
