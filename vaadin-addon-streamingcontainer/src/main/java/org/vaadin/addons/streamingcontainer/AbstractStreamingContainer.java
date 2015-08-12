@@ -35,6 +35,15 @@ public abstract class AbstractStreamingContainer<BEANTYPE> implements StreamingC
     /** The query definition. */
     private QueryDefinition<BEANTYPE> queryDefinition = null;
 
+    /** The initial batch size. */
+    private final int initialBatchSize;
+
+    /** The batch size hint. */
+    private final int batchSizeHint;
+
+    /** The max query size hint. */
+    private final int maxQuerySizeHint;
+
     /** The item set change listeners. */
     private Collection<ItemSetChangeListener> itemSetChangeListeners = null;
 
@@ -49,7 +58,10 @@ public abstract class AbstractStreamingContainer<BEANTYPE> implements StreamingC
      * Instantiates a new abstract streaming container.
      */
     protected AbstractStreamingContainer(final QueryFactory<BEANTYPE> _queryFactory,
-                                         final QueryDefinition<BEANTYPE> _queryDefinition)
+                                         final QueryDefinition<BEANTYPE> _queryDefinition,
+                                         final int _initialBatchSize,
+                                         final int _batchSizeHint,
+                                         final int _maxQuerySizeHint)
     {
         if (null == _queryFactory) {
             throw new NullPointerException("_queryFactory is NULL");
@@ -60,6 +72,9 @@ public abstract class AbstractStreamingContainer<BEANTYPE> implements StreamingC
 
         this.queryFactory = _queryFactory;
         this.queryDefinition = _queryDefinition;
+        this.initialBatchSize = _initialBatchSize;
+        this.batchSizeHint = _batchSizeHint;
+        this.maxQuerySizeHint = _maxQuerySizeHint;
     }
 
     /*************************************************************************
@@ -154,6 +169,25 @@ public abstract class AbstractStreamingContainer<BEANTYPE> implements StreamingC
             this.queryDefinition = _queryDefinition;
             refresh();
         }
+    }
+
+    /*************************************************************************
+     * SIZE CONFIGURATIONS
+     *************************************************************************/
+
+    public int getInitialBatchSize()
+    {
+        return initialBatchSize;
+    }
+
+    public int getBatchSizeHint()
+    {
+        return batchSizeHint;
+    }
+
+    public int getMaxQuerySizeHint()
+    {
+        return maxQuerySizeHint;
     }
 
     /*************************************************************************

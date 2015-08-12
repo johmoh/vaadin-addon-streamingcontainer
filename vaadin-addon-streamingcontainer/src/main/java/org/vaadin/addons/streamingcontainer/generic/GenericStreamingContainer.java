@@ -82,9 +82,12 @@ public class GenericStreamingContainer<BEANTYPE> extends AbstractStreamingContai
      */
     public GenericStreamingContainer(final QueryFactory<BEANTYPE> _queryFactory,
                                      final QueryDefinition<BEANTYPE> _queryDefinition,
-                                     final ItemBuilder<BEANTYPE> _itemBuilder)
+                                     final ItemBuilder<BEANTYPE> _itemBuilder,
+                                     final int _initialBatchSize,
+                                     final int _batchSizeHint,
+                                     final int _maxQuerySizeHint)
     {
-        super(_queryFactory, _queryDefinition);
+        super(_queryFactory, _queryDefinition, _initialBatchSize, _batchSizeHint, _maxQuerySizeHint);
 
         if (null == _itemBuilder) {
             throw new NullPointerException("_itemBuilder is NULL");
@@ -239,14 +242,13 @@ public class GenericStreamingContainer<BEANTYPE> extends AbstractStreamingContai
 
         final int numberOfLoadedItems = getNumberOfLoadedItems();
         assert (numberOfLoadedItems >= 0);
-        final QueryDefinition<BEANTYPE> queryDefinition = getQueryDefinition();
         final int numberOfItems;
         if (numberOfLoadedItems == 0) {
-            final int initialBatchSizeHint = Math.max(0, queryDefinition.getInitialBatchSize());
+            final int initialBatchSizeHint = Math.max(0, getInitialBatchSize());
             numberOfItems = Math.max(initialBatchSizeHint, Limits.MIN_INITIAL_BATCH_SIZE_LIMIT);
         }
         else {
-            final int batchSizeHint = Math.max(0, queryDefinition.getBatchSizeHint());
+            final int batchSizeHint = Math.max(0, getBatchSizeHint());
             numberOfItems = Math.max(batchSizeHint, Limits.MIN_BATCH_SIZE_LIMIT);
         }
         assert (numberOfItems >= 0);
@@ -281,7 +283,6 @@ public class GenericStreamingContainer<BEANTYPE> extends AbstractStreamingContai
         // Calculate maximum number of objects that can be loaded but is lower or equal to "_numberOfItems"
         final int numberOfLoadedItems = getNumberOfLoadedItems();
         assert (numberOfLoadedItems >= 0);
-        final QueryDefinition<BEANTYPE> queryDefinition = getQueryDefinition();
         final int numberOfItems;
         if (numberOfLoadedItems == 0) {
             numberOfItems = Math.max(_numberOfItems, Limits.MIN_INITIAL_BATCH_SIZE_LIMIT);
@@ -290,8 +291,8 @@ public class GenericStreamingContainer<BEANTYPE> extends AbstractStreamingContai
             numberOfItems = Math.max(_numberOfItems, Limits.MIN_BATCH_SIZE_LIMIT);
         }
         assert (numberOfItems >= 0);
-        final int maxQuerySizeHint = Math.max(0, queryDefinition.getMaxQuerySizeHint());
-        final int maxQuerySize = Math.max(0, Math.min(maxQuerySizeHint, Limits.MAX_NUMBER_OF_ITEMS_LIMIT));
+        final int maxQuerySizeHint = Math.max(0, getMaxQuerySizeHint());
+        final int maxQuerySize = Math.max(0, Math.min(maxQuerySizeHint, Limits.MAX_QUERY_SIZE_LIMIT));
         final int maxNumberOfItems = Math.min(numberOfItems, Math.max(0, maxQuerySize - numberOfLoadedItems));
         assert (maxNumberOfItems >= 0);
         System.out.println("CALL LazyStreamingQueryContainer.loadNextItemsFromStream(...): numberOfLoadedItems="
@@ -319,6 +320,7 @@ public class GenericStreamingContainer<BEANTYPE> extends AbstractStreamingContai
         final int startIndex = index2itemList.size();
         int newNumberOfLoadedItems = numberOfLoadedItems;
         boolean maxQuerySizeReached = false;
+        final QueryDefinition<BEANTYPE> queryDefinition = getQueryDefinition();
         final BeanDefinition<BEANTYPE> beanDefinition = queryDefinition.getBeanDefinition();
         final Object idPropertyId = beanDefinition.getIdPropertyId();
         for (final BEANTYPE object : loadedObjects) {
@@ -381,8 +383,7 @@ public class GenericStreamingContainer<BEANTYPE> extends AbstractStreamingContai
         int oldSize = getNumberOfLoadedItems();
         int newSize = oldSize;
         final int startIndex = oldSize;
-        final QueryDefinition<BEANTYPE> queryDefinition = getQueryDefinition();
-        final int maxQuerySizeHint = queryDefinition.getMaxQuerySizeHint();
+        final int maxQuerySizeHint = getMaxQuerySizeHint();
         do {
             loadNextItemsFromStream(maxQuerySizeHint, false);
             newSize = getNumberOfLoadedItems();

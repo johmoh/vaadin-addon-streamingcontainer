@@ -4,6 +4,7 @@
 package org.vaadin.addons.streamingcontainer.generic;
 
 import java.lang.reflect.Constructor;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.vaadin.addons.streamingcontainer.AbstractQuery;
 import org.vaadin.addons.streamingcontainer.AbstractQueryFactory;
@@ -21,15 +22,55 @@ import com.vaadin.data.Container.Filter;
  */
 public final class GenericQueryFactory<BEANTYPE> extends AbstractQueryFactory<BEANTYPE>
 {
+    /** The Constant instanceHashMap. */
+    @SuppressWarnings("rawtypes")
+    private static final ConcurrentHashMap<Class<?>, GenericQueryFactory> instanceHashMap = new ConcurrentHashMap<Class<?>, GenericQueryFactory>();
+
     /**
      * Instantiates a new generic query factory.
      *
      * @param _queryType
      *            the _query type
      */
-    public GenericQueryFactory(final Class<? extends AbstractQuery<BEANTYPE>> _queryType)
+    private GenericQueryFactory(final Class<? extends AbstractQuery<BEANTYPE>> _queryType)
     {
         super(_queryType);
+    }
+
+    /**
+     * Gets the single instance of GenericQueryFactory.
+     *
+     * @param <BEANTYPE>
+     *            the generic type
+     * @param _queryType
+     *            the _query type
+     * @return single instance of GenericQueryFactory
+     */
+    public static <BEANTYPE> GenericQueryFactory<BEANTYPE> getInstance(final Class<? extends AbstractQuery<BEANTYPE>> _queryType)
+    {
+        if (null == _queryType) {
+            throw new NullPointerException("_queryType is NULL");
+        }
+
+        final GenericQueryFactory<BEANTYPE> result;
+        if (instanceHashMap.containsKey(_queryType)) {
+            @SuppressWarnings("unchecked")
+            final GenericQueryFactory<BEANTYPE> factory = instanceHashMap.get(_queryType);
+            result = factory;
+        }
+        else {
+            synchronized (instanceHashMap) {
+                if (instanceHashMap.containsKey(_queryType)) {
+                    result = getInstance(_queryType);
+                }
+                else {
+                    result = new GenericQueryFactory<BEANTYPE>(_queryType);
+                    instanceHashMap.put(_queryType, result);
+                }
+            }
+        }
+
+        return result;
     }
 
     /**

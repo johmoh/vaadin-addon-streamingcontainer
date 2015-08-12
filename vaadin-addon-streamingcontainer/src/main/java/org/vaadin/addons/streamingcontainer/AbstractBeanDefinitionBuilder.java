@@ -39,7 +39,7 @@ public abstract class AbstractBeanDefinitionBuilder<BEANTYPE, SUBTYPE extends Ab
      *
      * @return the this
      */
-    protected SUBTYPE getThis()
+    protected final SUBTYPE getThis()
     {
         @SuppressWarnings("unchecked")
         final SUBTYPE __this = (SUBTYPE) this;

@@ -11,7 +11,6 @@ import java.util.Map;
 
 import org.vaadin.addons.streamingcontainer.BeanDefinition;
 import org.vaadin.addons.streamingcontainer.Constants;
-import org.vaadin.addons.streamingcontainer.Constants.Defaults;
 import org.vaadin.addons.streamingcontainer.QueryDefinition;
 
 import com.vaadin.data.Container.Filter;
@@ -27,15 +26,6 @@ public final class GenericQueryDefinition<BEANTYPE> implements QueryDefinition<B
 
     /** The property definition set. */
     private final BeanDefinition<BEANTYPE> beanDefinition;
-
-    /** The initial batch size. */
-    private int initialBatchSize;
-
-    /** The batch size hint. */
-    private int batchSizeHint;
-
-    /** The max query size hint. */
-    private int maxQuerySizeHint;
 
     /** The additional parameter map. */
     private Map<Object, Object> additionalParameterMap = new HashMap<Object, Object>();
@@ -66,9 +56,6 @@ public final class GenericQueryDefinition<BEANTYPE> implements QueryDefinition<B
     public GenericQueryDefinition(final BeanDefinition<BEANTYPE> _beanDefinition)
     {
         this.beanDefinition = _beanDefinition;
-        this.initialBatchSize = Defaults.DEFAULT_INITIAL_BATCH_SIZE_HINT;
-        this.batchSizeHint = Defaults.DEFAULT_BATCH_SIZE_HINT;
-        this.maxQuerySizeHint = Defaults.DEFAULT_MAX_QUERY_SIZE_HINT;
         this.sortPropertyIds = Constants.EMPTY_SORT_PROPERTY_IDS;
         this.sortPropertyAscendingStates = Constants.EMPTY_SORT_PROPERTY_ASCENDING_STATES;
         this.filters = new ArrayList<Filter>();
@@ -83,8 +70,6 @@ public final class GenericQueryDefinition<BEANTYPE> implements QueryDefinition<B
     public GenericQueryDefinition(final QueryDefinition<BEANTYPE> _prototype)
     {
         this.beanDefinition = new GenericBeanDefinition<BEANTYPE>(_prototype.getBeanDefinition());
-        this.batchSizeHint = _prototype.getBatchSizeHint();
-        this.maxQuerySizeHint = _prototype.getMaxQuerySizeHint();
         this.sortPropertyIds = _prototype.getSortPropertyIds();
         this.sortPropertyAscendingStates = _prototype.getSortPropertyAscendingStates();
         this.filters = new ArrayList<Filter>();
@@ -98,72 +83,6 @@ public final class GenericQueryDefinition<BEANTYPE> implements QueryDefinition<B
     public BeanDefinition<BEANTYPE> getBeanDefinition()
     {
         return beanDefinition;
-    }
-
-    /**
-     * @see org.vaadin.addons.streamingcontainer.QueryDefinition#getInitialBatchSize()
-     */
-    @Override
-    public int getInitialBatchSize()
-    {
-        return initialBatchSize;
-    }
-
-    /**
-     * Sets the initial batch size hint.
-     *
-     * @param _initialBatchSize
-     *            the _initial batch size
-     * @return the generic query definition
-     */
-    public GenericQueryDefinition<BEANTYPE> setInitialBatchSizeHint(final int _initialBatchSize)
-    {
-        this.initialBatchSize = _initialBatchSize;
-        return this;
-    }
-
-    /**
-     * @see org.vaadin.addons.streamingcontainer.QueryDefinition#getBatchSizeHint()
-     */
-    @Override
-    public int getBatchSizeHint()
-    {
-        return batchSizeHint;
-    }
-
-    /**
-     * Sets the batch size hint.
-     *
-     * @param _batchSizeHint
-     *            the _batch size hint
-     * @return the query definition
-     */
-    public GenericQueryDefinition<BEANTYPE> setBatchSizeHint(final int _batchSizeHint)
-    {
-        this.batchSizeHint = _batchSizeHint;
-        return this;
-    }
-
-    /**
-     * @see org.vaadin.addons.streamingcontainer.QueryDefinition#getMaxQuerySizeHint()
-     */
-    @Override
-    public int getMaxQuerySizeHint()
-    {
-        return maxQuerySizeHint;
-    }
-
-    /**
-     * Sets the max query size hint.
-     *
-     * @param _maxQuerySizeHint
-     *            the _max query size hint
-     * @return the query definition
-     */
-    public GenericQueryDefinition<BEANTYPE> setMaxQuerySizeHint(final int _maxQuerySizeHint)
-    {
-        this.maxQuerySizeHint = _maxQuerySizeHint;
-        return this;
     }
 
     /**

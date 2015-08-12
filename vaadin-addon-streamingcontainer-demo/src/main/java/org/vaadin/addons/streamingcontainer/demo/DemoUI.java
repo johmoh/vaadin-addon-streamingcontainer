@@ -10,14 +10,12 @@ import javax.persistence.Persistence;
 import javax.servlet.annotation.WebServlet;
 
 import org.vaadin.addons.streamingcontainer.BeanDefinition;
-import org.vaadin.addons.streamingcontainer.ItemBuilder;
 import org.vaadin.addons.streamingcontainer.QueryDefinition;
 import org.vaadin.addons.streamingcontainer.QueryFactory;
 import org.vaadin.addons.streamingcontainer.StatusPropertyDefinition;
 import org.vaadin.addons.streamingcontainer.StreamingContainer;
-import org.vaadin.addons.streamingcontainer.generic.GenericItemBuilder;
 import org.vaadin.addons.streamingcontainer.generic.GenericQueryDefinition;
-import org.vaadin.addons.streamingcontainer.generic.GenericStreamingContainer;
+import org.vaadin.addons.streamingcontainer.generic.GenericStreamingContainerBuilder;
 import org.vaadin.addons.streamingcontainer.generic.GenericTypeBasedBeanDefinitionBuilder;
 import org.vaadin.addons.streamingcontainer.jpa.generic.GenericJpaQueryFactory;
 
@@ -52,13 +50,17 @@ public class DemoUI extends UI
     /** The Constant NUMBER_OF_TEST_DATA. */
     public static final int NUMBER_OF_TEST_DATA = 10000;
 
+    private static EntityManager entityManager = null;
+
     /**
      * Initialize db.
-     *
-     * @return the entity manager
      */
-    private EntityManager initializeDB()
+    private synchronized void initializeDB()
     {
+        if (null != entityManager) {
+            return;
+        }
+
         try {
             Class.forName("org.h2.Driver");
         }
@@ -66,7 +68,7 @@ public class DemoUI extends UI
             throw new RuntimeException(_ex);
         }
         final EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
-        final EntityManager entityManager = entityManagerFactory.createEntityManager();
+        entityManager = entityManagerFactory.createEntityManager();
 
         final String[] firstNames = new String[] { "Jana", "Hannes", "Igor", "Max", "Steffanie", "Florentina",
                 "Michael", "William", "Susanne", "Peter", "Dietmar" };
@@ -105,8 +107,6 @@ public class DemoUI extends UI
             _ex.printStackTrace();
         }
         System.out.println("NOTE DemoUI: ...ENDED INSERTING DATA");
-
-        return entityManager;
     }
 
     /**
@@ -126,6 +126,8 @@ public class DemoUI extends UI
     @Override
     protected void init(final VaadinRequest request)
     {
+        initializeDB();
+
         final BeanDefinition<Person> beanDefinition = new GenericTypeBasedBeanDefinitionBuilder<Person>(Person.class)
             .setPropertyDefinitionSortable("id", true)
             .setPropertyDefinitionSortable("lastName", true)
@@ -133,22 +135,18 @@ public class DemoUI extends UI
             .addOrSetPropertyDefinition(StatusPropertyDefinition.getInstance())
             .build();
         final QueryDefinition<Person> queryDefinition = new GenericQueryDefinition<Person>(beanDefinition)
-            .setInitialBatchSizeHint(200)
-            .setBatchSizeHint(100)
-            .setMaxQuerySizeHint(200000)
             .setSortProperties(new String[] { "id" }, new boolean[] { false })
             .addFilters( //
                     new SimpleStringFilter("lastName", "er", true, false), //
                     new Between("age", 25, 35) //
             );
-        final EntityManager entityManager = initializeDB();
         final QueryFactory<Person> queryFactory = new GenericJpaQueryFactory<Person>(entityManager);
-        final ItemBuilder<Person> itemBuilder = GenericItemBuilder.<Person> getInstance();
-        final StreamingContainer<?> container = new GenericStreamingContainer<Person>( //
-                queryFactory, //
-                queryDefinition, //
-                itemBuilder //
-        );
+        final StreamingContainer<Person> container = new GenericStreamingContainerBuilder<Person>(queryFactory,
+                queryDefinition) //
+            .setInitialBatchSizeHint(200)
+            .setBatchSizeHint(100)
+            .setMaxQuerySizeHint(200000)
+            .build();
         final Grid grid = new Grid(container);
         grid.setColumnReorderingAllowed(true);
         grid.setColumnOrder("id", "firstName", "lastName", "age");

@@ -31,8 +31,8 @@ public final class Constants
         /** The Constant MIN_BATCH_SIZE_LIMIT. */
         public static final int MIN_BATCH_SIZE_LIMIT = 25;
 
-        /** The Constant MAX_NUMBER_OF_ITEMS_LIMIT. */
-        public static final int MAX_NUMBER_OF_ITEMS_LIMIT = 100000;
+        /** The Constant MAX_QUERY_SIZE_LIMIT. */
+        public static final int MAX_QUERY_SIZE_LIMIT = 100000;
     }
 
     /*************************************************************************
