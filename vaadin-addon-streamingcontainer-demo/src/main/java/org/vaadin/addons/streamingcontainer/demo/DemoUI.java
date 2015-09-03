@@ -50,6 +50,7 @@ public class DemoUI extends UI
     /** The Constant NUMBER_OF_TEST_DATA. */
     public static final int NUMBER_OF_TEST_DATA = 10000;
 
+    /** The entity manager. */
     private static EntityManager entityManager = null;
 
     /**
@@ -61,12 +62,6 @@ public class DemoUI extends UI
             return;
         }
 
-        try {
-            Class.forName("org.h2.Driver");
-        }
-        catch (final ClassNotFoundException _ex) {
-            throw new RuntimeException(_ex);
-        }
         final EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
         entityManager = entityManagerFactory.createEntityManager();
 
