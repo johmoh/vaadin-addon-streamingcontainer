@@ -1,25 +1,46 @@
-# MyComponent Add-on for Vaadin 7
+# Streaming Container Add-on for Vaadin 7
 
-MyComponent is an UI component add-on for Vaadin 7.
+...if you want a kind of endless scrolling in your VAADIN grid...
+
+Main intension: big data queries where the Lazy Query Container (another VAADIN add-on) is not the best idea because it needs to implement a "size()" method. So, you need to request the final size of the container. This container works like a stream. It streams and streams and streams until there is no more data left or a specified condition is reached (like max. number of elements are streamed).
+
+PRO
+* It works...
+* Support for JPA build in (see: vaadin-addon-streamingcontainer-jpa)
+* Is intended to work with VAADIN grid
+
+CONTRA
+* No support for nested properties
+* No support for add / update / delete bean items - query only implementation at the moment
+* Almost no documentation; Please see demo code... :-)
+* All log statements should be removed
+* No test code at the moment - it's a project in my spare time and I also want to have fun...
+* No support for "multi column primary keys" - only "single column primary key" support
+* Might work with VAADIN table component or not (never tested / validated) - This add-on targets VAADIN grid only; Everything else is optional
+
+...to make it short: WORK IN PROGRESS! But if you need an endless scrolling solution in your VAADIN grid
 
 ## Online demo
 
-Try the add-on demo at <url of the online demo>
+Sorry. There is no online demo at the moment.
 
 ## Download release
 
-Official releases of this add-on are available at Vaadin Directory. For Maven instructions, download and reviews, go to http://vaadin.com/addon/vaadin-addon-streamingcontainer
+At the moment you have to clone this repository.
+
+TODO: Official releases of this add-on are available at Vaadin Directory. For Maven instructions, download and reviews, go to http://vaadin.com/addon/vaadin-addon-streamingcontainer
 
 ## Building and running demo
 
-git clone <url of the MyComponent repository>
-mvn clean install
-cd demo
-mvn jetty:run
-
-To see the demo, navigate to http://localhost:8080/
+* git clone ...
+* mvn clean install
+* cd vaadin-addon-streamingcontainer-demo
+* mvn jetty:run
+* TODO URL is incorrect: To see the demo, navigate to http://localhost:8080/
 
 ## Development with Eclipse IDE
+
+TODO: Text is original. Correction needed...
 
 For further development of this add-on, the following tool-chain is recommended:
 - Eclipse IDE
