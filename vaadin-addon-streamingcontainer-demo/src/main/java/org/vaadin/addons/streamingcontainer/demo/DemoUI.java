@@ -121,27 +121,37 @@ public class DemoUI extends UI
     @Override
     protected void init(final VaadinRequest request)
     {
+    	// Initialize DB - What a hack...
         initializeDB();
 
+        // Build a bean definition - A bean definition describes the data of a bean in the container
         final BeanDefinition<Person> beanDefinition = new GenericTypeBasedBeanDefinitionBuilder<Person>(Person.class)
             .setPropertyDefinitionSortable("id", true)
             .setPropertyDefinitionSortable("lastName", true)
             .setPropertyDefinitionSortable("age", true)
             .addOrSetPropertyDefinition(StatusPropertyDefinition.getInstance())
             .build();
+        
+        // Build a query definition - A query definition describes the query used by a container
         final QueryDefinition<Person> queryDefinition = new GenericQueryDefinition<Person>(beanDefinition)
             .setSortProperties(new String[] { "id" }, new boolean[] { false })
-            .addFilters( //
+            .addFilters( // Add some static search conditions
                     new SimpleStringFilter("lastName", "er", true, false), //
                     new Between("age", 25, 35) //
             );
+        
+        // Create a query factory - A query factory is used by the container to create a query if needed
         final QueryFactory<Person> queryFactory = new GenericJpaQueryFactory<Person>(entityManager);
+        
+        // Build a container
         final StreamingContainer<Person> container = new GenericStreamingContainerBuilder<Person>(queryFactory,
                 queryDefinition) //
             .setInitialBatchSizeHint(200)
             .setBatchSizeHint(100)
             .setMaxQuerySizeHint(200000)
             .build();
+        
+        // Build layout - Here: create a VAADIN grid and set the container
         final Grid grid = new Grid(container);
         grid.setColumnReorderingAllowed(true);
         grid.setColumnOrder("id", "firstName", "lastName", "age");
@@ -149,21 +159,10 @@ public class DemoUI extends UI
         grid.setHeightMode(HeightMode.ROW);
         grid.setWidth(50, Unit.PERCENTAGE);
 
-        // final HeaderRow gridHeader = grid.addHeaderRowAt(1);
-        // gridHeader.getCell("id").setComponent(new TextField());
-
-        // final FooterRow gridFooter = grid.addFooterRowAt(0);
-        // final Collection<Object> columnIds = new ArrayList<Object>(grid.getColumns().size());
-        // for (final Column column : grid.getColumns()) {
-        // columnIds.add(column.getPropertyId());
-        // }
-        // gridFooter.join(columnIds.toArray(new Object[columnIds.size()]));
-
         // Show it in the middle of the screen
         final VerticalLayout layout = new VerticalLayout();
         layout.setMargin(true);
-        // layout.setStyleName("demoContentLayout");
-        // layout.setSizeFull();
+        layout.setSizeFull();
         layout.addComponent(grid);
         setContent(layout);
     }
